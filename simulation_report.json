@@ -1,0 +1,94 @@
+{
+    "simulation_parameters": {
+        "queue_size": 100,
+        "simulation_time": 60,
+        "packet_size_ranges": {
+            "FTP": [
+                500,
+                1500
+            ],
+            "WEB": [
+                100,
+                1000
+            ],
+            "VIDEO": [
+                1000,
+                5000
+            ]
+        }
+    },
+    "results": {
+        "FIFO": {
+            "total_packets_sent": 300,
+            "total_packets_received": 300,
+            "packets_dropped": 0,
+            "average_queue_delay": 8.666666666666675e-05,
+            "throughput": 5.0,
+            "host_metrics": {
+                "FTP": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 0.5050749999999998
+                },
+                "WEB": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 0.28193999999999997
+                },
+                "VIDEO": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 1.48589
+                }
+            }
+        },
+        "CODEL": {
+            "total_packets_sent": 300,
+            "total_packets_received": 300,
+            "packets_dropped": 0,
+            "average_queue_delay": 8.666666666666675e-05,
+            "throughput": 5.0,
+            "host_metrics": {
+                "FTP": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 0.5050749999999998
+                },
+                "WEB": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 0.28193999999999997
+                },
+                "VIDEO": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 1.48589
+                }
+            }
+        },
+        "PIE": {
+            "total_packets_sent": 300,
+            "total_packets_received": 300,
+            "packets_dropped": 0,
+            "average_queue_delay": 9.999999999999972e-05,
+            "throughput": 5.0,
+            "host_metrics": {
+                "FTP": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 0.50867
+                },
+                "WEB": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 0.27729500000000007
+                },
+                "VIDEO": {
+                    "packets_sent": 100,
+                    "packets_received": 100,
+                    "average_delay": 1.5681900000000004
+                }
+            }
+        }
+    }
+}
