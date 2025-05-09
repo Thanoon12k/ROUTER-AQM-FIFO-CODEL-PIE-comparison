@@ -3,6 +3,7 @@ import time
 import sys
 import threading
 import csv
+import matplotlib.pyplot as plt
 from datetime import datetime
 from dataclasses import dataclass
 from typing import Optional, List, Dict
@@ -138,6 +139,75 @@ class PacketQueue:
 
         return self.dequeue(), ""
 
+class StatisticsCollector:
+    """Collects and plots simulation statistics over time."""
+    
+    def __init__(self):
+        self.timestamps = []
+        self.throughput = []  # packets processed per second
+        self.queue_size = []
+        self.processing_times = []
+        self.transmission_times = []
+        self.lock = threading.Lock()
+
+    def record_statistics(self, current_time: float, queue: 'PacketQueue') -> None:
+        """Record statistics at the current time."""
+        with self.lock:
+            self.timestamps.append(current_time)
+            # Calculate throughput (packets processed per second)
+            if len(self.timestamps) > 1:
+                time_diff = current_time - self.timestamps[-2]
+                throughput = queue.stats['total_processed'] / current_time if current_time > 0 else 0
+            else:
+                throughput = 0
+            self.throughput.append(throughput)
+            self.queue_size.append(len(queue.items))
+            self.processing_times.append(queue.stats['total_processing_time'])
+            self.transmission_times.append(queue.stats['total_transmission_time'])
+
+    def plot_statistics(self) -> None:
+        """Plot the collected statistics."""
+        plt.figure(figsize=(15, 10))
+        
+        # Plot 1: Throughput over time
+        plt.subplot(2, 2, 1)
+        plt.plot(self.timestamps, self.throughput, 'b-', label='Throughput')
+        plt.xlabel('Simulation Time (s)')
+        plt.ylabel('Throughput (packets/s)')
+        plt.title('Network Throughput Over Time')
+        plt.grid(True)
+        plt.legend()
+
+        # Plot 2: Queue Size over time
+        plt.subplot(2, 2, 2)
+        plt.plot(self.timestamps, self.queue_size, 'r-', label='Queue Size')
+        plt.xlabel('Simulation Time (s)')
+        plt.ylabel('Queue Size')
+        plt.title('Queue Size Over Time')
+        plt.grid(True)
+        plt.legend()
+
+        # Plot 3: Processing Time over time
+        plt.subplot(2, 2, 3)
+        plt.plot(self.timestamps, self.processing_times, 'g-', label='Processing Time')
+        plt.xlabel('Simulation Time (s)')
+        plt.ylabel('Total Processing Time (s)')
+        plt.title('Cumulative Processing Time')
+        plt.grid(True)
+        plt.legend()
+
+        # Plot 4: Transmission Time over time
+        plt.subplot(2, 2, 4)
+        plt.plot(self.timestamps, self.transmission_times, 'm-', label='Transmission Time')
+        plt.xlabel('Simulation Time (s)')
+        plt.ylabel('Total Transmission Time (s)')
+        plt.title('Cumulative Transmission Time')
+        plt.grid(True)
+        plt.legend()
+
+        plt.tight_layout()
+        plt.show()
+
 class Simulation:
     """Main simulation class that coordinates the entire process."""
     
@@ -148,6 +218,9 @@ class Simulation:
         self.network_link = NetworkLink(network_speed)
         self.csv_file = csv_file
         self.packets_data = self._load_packets_from_csv()
+        self.stats_collector = StatisticsCollector()
+        self.stats_interval = 0.1  # Collect stats every 0.1 seconds
+        self.simulation_complete = threading.Event()
 
     def _load_packets_from_csv(self) -> List[Dict[str, int]]:
         """Load packet data from CSV file."""
@@ -163,6 +236,13 @@ class Simulation:
         except Exception as e:
             self.event_logger.log_event(f"Error reading CSV file: {str(e)}")
             sys.exit(1)
+
+    def _collect_statistics(self) -> None:
+        """Collect statistics periodically during simulation."""
+        while not self.simulation_complete.is_set():
+            current_time = time.time() - self.sim_start_time
+            self.stats_collector.record_statistics(current_time, self.packet_queue)
+            time.sleep(self.stats_interval)
 
     def generate_packets(self) -> None:
         """Generate packets with specified intervals."""
@@ -209,11 +289,12 @@ class Simulation:
                     if self.packet_queue.stats['total_processed'] == len(self.packets_data):
                         self._print_statistics()
                         self.event_logger.log_event("=== All packets processed - Exiting ===")
-                        sys.exit(0)
+                        self.simulation_complete.set()
+                        return
 
         self._print_statistics()
         self.event_logger.log_event("=== All packets processed - Exiting ===")
-        sys.exit(0)
+        self.simulation_complete.set()
 
     def _print_statistics(self) -> None:
         """Print simulation statistics."""
@@ -240,6 +321,10 @@ class Simulation:
     def run(self) -> None:
         """Run the simulation with proper thread management."""
         try:
+            # Start statistics collection thread
+            stats_thread = threading.Thread(target=self._collect_statistics, daemon=True)
+            stats_thread.start()
+
             generator_thread = threading.Thread(target=self.generate_packets)
             processor_thread = threading.Thread(target=self.process_packets)
 
@@ -248,6 +333,12 @@ class Simulation:
 
             generator_thread.join()
             processor_thread.join()
+
+            # Wait for stats collection to complete
+            self.simulation_complete.wait()
+            
+            # Plot statistics in the main thread
+            self.stats_collector.plot_statistics()
 
         except KeyboardInterrupt:
             print("\nSimulation interrupted by user")
