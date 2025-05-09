@@ -20,6 +20,7 @@ class Packet:
     start_processing_time: float = 0
     completion_time: float = 0
     delete_time: float = 0
+    drop_probability: float = 0  # PIE drop probability
 
     def __str__(self) -> str:
         return f"Packet {self.packet_id} (size: {self.data_size} bytes)"
@@ -30,13 +31,13 @@ class EventLogger:
     def __init__(self, start_time: float):
         self.lock = threading.Lock()
         self.start_time = start_time
-        self.events_file = "events.txt"
+        self.events_file = "pie_events.txt"
         self._initialize_log_file()
 
     def _initialize_log_file(self) -> None:
         """Initialize the log file with a header."""
         with open(self.events_file, 'w') as f:
-            f.write("=== Network Simulation Events ===\n\n")
+            f.write("=== PIE Network Simulation Events ===\n\n")
 
     def _get_elapsed_time(self) -> str:
         """Calculate and format elapsed time since simulation start."""
@@ -70,8 +71,8 @@ class NetworkLink:
             packet.arrival_time = time.time() - sim_start_time
             return transmission_time
 
-class PacketQueue:
-    """Thread-safe queue for managing network packets."""
+class PIEQueue:
+    """Thread-safe queue implementing PIE (Proportional Integral controller Enhanced) algorithm."""
     
     def __init__(self, capacity: int, processing_speed: int = 1000):
         self.items: List[Packet] = []
@@ -79,12 +80,22 @@ class PacketQueue:
         self.processing_speed = processing_speed  # bytes per second
         self.lock = threading.Lock()
         self.condition = threading.Condition(self.lock)
+        
+        # PIE parameters
+        self.drop_probability = 0.0
+        self.alpha = 0.125  # Proportional gain
+        self.beta = 1.25    # Integral gain
+        self.target_delay = 0.02  # Target delay in seconds
+        self.current_delay = 0.0
+        self.last_update_time = 0.0
+        
         self.stats = {
             'total_packets': 0,
             'total_processed': 0,
             'total_dropped': 0,
             'total_processing_time': 0,
-            'total_transmission_time': 0
+            'total_transmission_time': 0,
+            'queue_delays': []  # Track queue delays for PIE
         }
 
     def is_empty(self) -> bool:
@@ -95,15 +106,59 @@ class PacketQueue:
         """Check if the queue is full."""
         return len(self.items) == self.capacity
 
+    def update_pie_parameters(self, current_time: float) -> None:
+        """Update PIE parameters based on current queue state."""
+        if self.last_update_time == 0:
+            self.last_update_time = current_time
+            return
+
+        # Calculate current queue delay
+        if not self.is_empty() and self.items[0] is not None:
+            self.current_delay = (current_time - self.items[0].arrival_time)
+        else:
+            self.current_delay = 0.0
+
+        # Update drop probability using PIE algorithm
+        time_diff = current_time - self.last_update_time
+        if time_diff > 0:
+            # Calculate error
+            error = self.current_delay - self.target_delay
+            
+            # Update drop probability
+            self.drop_probability += self.alpha * error + self.beta * error * time_diff
+            
+            # Ensure drop probability is between 0 and 1
+            self.drop_probability = max(0.0, min(1.0, self.drop_probability))
+            
+            # Reset drop probability if queue is empty
+            if self.is_empty():
+                self.drop_probability = 0.0
+            
+            self.last_update_time = current_time
+
     def enqueue(self, packet: Optional[Packet]) -> bool:
-        """Add a packet to the queue if there's space."""
+        """Add a packet to the queue using PIE algorithm."""
         with self.lock:
-            if packet is None or not self.is_full():
+            if packet is None:
                 self.items.append(packet)
                 self.condition.notify()
                 return True
-            if packet is not None:
+
+            current_time = time.time()
+            self.update_pie_parameters(current_time)
+            
+            # Apply PIE drop decision
+            if random.random() < self.drop_probability:
                 self.stats['total_dropped'] += 1
+                return False
+
+            if not self.is_full():
+                packet.drop_probability = self.drop_probability
+                self.items.append(packet)
+                self.condition.notify()
+                return True
+            
+            self.stats['total_dropped'] += 1
             return False
 
     def dequeue(self) -> Optional[Packet]:
@@ -136,6 +191,11 @@ class PacketQueue:
         current_packet.completion_time = time.time() - sim_start_time
         self.stats['total_processing_time'] += time_to_process
         self.stats['total_processed'] += 1
+        
+        # Record queue delay for statistics
+        if current_packet.arrival_time > 0:
+            queue_delay = current_packet.start_processing_time - current_packet.arrival_time
+            self.stats['queue_delays'].append(queue_delay)
 
         return self.dequeue(), ""
 
@@ -144,28 +204,29 @@ class StatisticsCollector:
     
     def __init__(self):
         self.timestamps = []
-        self.throughput = []  # packets processed per second
+        self.throughput = []
         self.queue_size = []
         self.processing_times = []
-        self.transmission_times = []
-        self.dropped_packets = []
+        self.drop_probabilities = []
+        self.queue_delays = []
         self.lock = threading.Lock()
 
-    def record_statistics(self, current_time: float, queue: 'PacketQueue') -> None:
+    def record_statistics(self, current_time: float, queue: 'PIEQueue') -> None:
         """Record statistics at the current time."""
         with self.lock:
             self.timestamps.append(current_time)
-            # Calculate throughput (packets processed per second)
             if len(self.timestamps) > 1:
-                time_diff = current_time - self.timestamps[-2]
                 throughput = queue.stats['total_processed'] / current_time if current_time > 0 else 0
             else:
                 throughput = 0
             self.throughput.append(throughput)
             self.queue_size.append(len(queue.items))
             self.processing_times.append(queue.stats['total_processing_time'])
-            self.transmission_times.append(queue.stats['total_transmission_time'])
-            self.dropped_packets.append(queue.stats['total_dropped'])
+            self.drop_probabilities.append(queue.drop_probability)
+            if queue.stats['queue_delays']:
+                self.queue_delays.append(queue.stats['queue_delays'][-1])
+            else:
+                self.queue_delays.append(0)
 
     def plot_statistics(self) -> None:
         """Plot the collected statistics."""
@@ -189,21 +250,21 @@ class StatisticsCollector:
         plt.grid(True)
         plt.legend()
 
-        # Plot 3: Processing Time over time
+        # Plot 3: Drop Probability over time
         plt.subplot(2, 2, 3)
-        plt.plot(self.timestamps, self.processing_times, 'g-', label='Processing Time')
+        plt.plot(self.timestamps, self.drop_probabilities, 'g-', label='Drop Probability')
         plt.xlabel('Simulation Time (s)')
-        plt.ylabel('Total Processing Time (s)')
-        plt.title('Cumulative Processing Time')
+        plt.ylabel('Drop Probability')
+        plt.title('PIE Drop Probability Over Time')
         plt.grid(True)
         plt.legend()
 
-        # Plot 4: Dropped Packets over time
+        # Plot 4: Queue Delay over time
         plt.subplot(2, 2, 4)
-        plt.plot(self.timestamps, self.dropped_packets, 'm-', label='Dropped Packets')
+        plt.plot(self.timestamps, self.queue_delays, 'm-', label='Queue Delay')
         plt.xlabel('Simulation Time (s)')
-        plt.ylabel('Number of Dropped Packets')
-        plt.title('Cumulative Dropped Packets')
+        plt.ylabel('Queue Delay (s)')
+        plt.title('Queue Delay Over Time')
         plt.grid(True)
         plt.legend()
 
@@ -216,12 +277,12 @@ class Simulation:
     def __init__(self, queue_capacity: int, network_speed: int, csv_file: str = "packets.csv"):
         self.sim_start_time = time.time()
         self.event_logger = EventLogger(self.sim_start_time)
-        self.packet_queue = PacketQueue(queue_capacity)
+        self.packet_queue = PIEQueue(queue_capacity)
         self.network_link = NetworkLink(network_speed)
         self.csv_file = csv_file
         self.packets_data = self._load_packets_from_csv()
         self.stats_collector = StatisticsCollector()
-        self.stats_interval = 0.1  # Collect stats every 0.1 seconds
+        self.stats_interval = 0.1
         self.simulation_complete = threading.Event()
 
     def _load_packets_from_csv(self) -> List[Dict[str, int]]:
@@ -260,12 +321,12 @@ class Simulation:
             self.event_logger.log_event(f"Generated {packet}")
             
             if not self.packet_queue.enqueue(packet):
-                self.event_logger.log_event(f"Queue full - {packet} dropped")
+                self.event_logger.log_event(f"Packet dropped by PIE - {packet}")
             
-            time.sleep(0.1)  # Simulate time between packet generation
+            time.sleep(0.1)
 
         self.event_logger.log_event("=== Packet Generation Complete ===")
-        self.packet_queue.enqueue(None)  # Signal end of processing
+        self.packet_queue.enqueue(None)
 
     def process_packets(self) -> None:
         """Process packets from the queue."""
@@ -279,15 +340,11 @@ class Simulation:
             transmission_time = self.network_link.transmit_packet(packet, self.sim_start_time)
             self.packet_queue.stats['total_transmission_time'] += transmission_time
 
-            if self.packet_queue.enqueue(packet):
-                self.event_logger.log_event(f"{packet} enqueued for processing")
-            else:
-                self.event_logger.log_event(f"Queue full - {packet} dropped")
-
+            # Process the packet directly instead of re-enqueueing
             if not self.packet_queue.is_empty():
                 processed_packet, _ = self.packet_queue.process_packets(self.sim_start_time)
                 if processed_packet:
-                    self.event_logger.log_event(f"{processed_packet} dequeued")
+                    self.event_logger.log_event(f"{processed_packet} processed")
                     if self.packet_queue.stats['total_processed'] == len(self.packets_data):
                         self._print_statistics()
                         self.event_logger.log_event("=== All packets processed - Exiting ===")
@@ -308,6 +365,7 @@ class Simulation:
             f"Total Packets Processed: {self.packet_queue.stats['total_processed']}",
             f"Total Packets Dropped: {self.packet_queue.stats['total_dropped']}",
             f"Average Processing Time: {self._calculate_avg_processing_time():.2f}s",
+            f"Average Queue Delay: {self._calculate_avg_queue_delay():.2f}s",
             f"Queue Capacity: {self.packet_queue.capacity}",
             "===========================\n"
         ]
@@ -320,10 +378,14 @@ class Simulation:
                    self.packet_queue.stats['total_processed'])
         return 0.0
 
+    def _calculate_avg_queue_delay(self) -> float:
+        """Calculate average queue delay safely."""
+        delays = self.packet_queue.stats['queue_delays']
+        return sum(delays) / len(delays) if delays else 0.0
+
     def run(self) -> None:
         """Run the simulation with proper thread management."""
         try:
-            # Start statistics collection thread
             stats_thread = threading.Thread(target=self._collect_statistics, daemon=True)
             stats_thread.start()
 
@@ -336,10 +398,7 @@ class Simulation:
             generator_thread.join()
             processor_thread.join()
 
-            # Wait for stats collection to complete
             self.simulation_complete.wait()
-            
-            # Plot statistics in the main thread
             self.stats_collector.plot_statistics()
 
         except KeyboardInterrupt:
@@ -352,11 +411,11 @@ class Simulation:
 def main():
     """Main entry point of the simulation."""
     simulation = Simulation(
-        queue_capacity=5,  # Increased queue capacity
+        queue_capacity=5,
         network_speed=1000,
         csv_file="packets.csv"
     )
     simulation.run()
 
 if __name__ == "__main__":
-    main()
+    main() 
