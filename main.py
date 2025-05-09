@@ -2,6 +2,7 @@ import random
 import time
 import sys
 import threading
+import csv
 from datetime import datetime
 from dataclasses import dataclass
 from typing import Optional, List, Dict
@@ -140,23 +141,38 @@ class PacketQueue:
 class Simulation:
     """Main simulation class that coordinates the entire process."""
     
-    def __init__(self, num_packets: int, queue_capacity: int, network_speed: int):
+    def __init__(self, queue_capacity: int, network_speed: int, csv_file: str = "packets.csv"):
         self.sim_start_time = time.time()
         self.event_logger = EventLogger(self.sim_start_time)
         self.packet_queue = PacketQueue(queue_capacity)
         self.network_link = NetworkLink(network_speed)
-        self.num_packets = num_packets
-        self.data_sizes = [10, 20, 30, 500, 80, 90, 110, 120, 130, 100]
+        self.csv_file = csv_file
+        self.packets_data = self._load_packets_from_csv()
+
+    def _load_packets_from_csv(self) -> List[Dict[str, int]]:
+        """Load packet data from CSV file."""
+        try:
+            with open(self.csv_file, 'r') as f:
+                reader = csv.DictReader(f)
+                return [{'packet_id': int(row['packet_id']), 
+                        'data_size': int(row['data_size'])} 
+                        for row in reader]
+        except FileNotFoundError:
+            self.event_logger.log_event(f"Error: CSV file '{self.csv_file}' not found")
+            sys.exit(1)
+        except Exception as e:
+            self.event_logger.log_event(f"Error reading CSV file: {str(e)}")
+            sys.exit(1)
 
     def generate_packets(self) -> None:
         """Generate packets with specified intervals."""
         self.event_logger.log_event("=== Starting Packet Generation ===")
-        self.packet_queue.stats['total_packets'] = self.num_packets
+        self.packet_queue.stats['total_packets'] = len(self.packets_data)
 
-        for i in range(self.num_packets):
+        for packet_data in self.packets_data:
             packet = Packet(
-                packet_id=i,
-                data_size=self.data_sizes[i],
+                packet_id=packet_data['packet_id'],
+                data_size=packet_data['data_size'],
                 creation_time=time.time() - self.sim_start_time
             )
             self.event_logger.log_event(f"Generated {packet}")
@@ -190,7 +206,7 @@ class Simulation:
                 processed_packet, _ = self.packet_queue.process_packets(self.sim_start_time)
                 if processed_packet:
                     self.event_logger.log_event(f"{processed_packet} dequeued")
-                    if self.packet_queue.stats['total_processed'] == self.num_packets:
+                    if self.packet_queue.stats['total_processed'] == len(self.packets_data):
                         self._print_statistics()
                         self.event_logger.log_event("=== All packets processed - Exiting ===")
                         sys.exit(0)
@@ -243,9 +259,9 @@ class Simulation:
 def main():
     """Main entry point of the simulation."""
     simulation = Simulation(
-        num_packets=10,
         queue_capacity=1,
-        network_speed=1000
+        network_speed=1000,
+        csv_file="packets.csv"
     )
     simulation.run()
 
