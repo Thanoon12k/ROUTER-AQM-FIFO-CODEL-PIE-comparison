@@ -1,16 +1,37 @@
-Packet 0 created at time 0.00 s
+=== Network Simulation Events ===
 
-Processing packets:
-------------------
-Packet 0 transmitted through link:
-  - Transmission time: 0.11s
-  - Arrival time at queue: 1.14s
-  - Successfully enqueued
- start Processing packet 0 at time 1.14s
- completed Processing packet 0 at time 1.15s
+00:00.002 - === Starting Packet Generation ===
+00:00.002 - === Starting Packet Processing ===
+00:00.003 - Generated Packet 0 (size: 10 bytes)
+00:00.116 - Generated Packet 1 (size: 20 bytes)
+00:00.116 - Packet 0 (size: 10 bytes) enqueued for processing
+00:00.117 - Queue full - Packet 1 (size: 20 bytes) dropped
+00:00.133 - Packet 0 (size: 10 bytes) dequeued
+00:00.235 - Generated Packet 2 (size: 30 bytes)
+00:00.338 - Generated Packet 3 (size: 500 bytes)
+00:00.370 - Queue full - Packet 2 (size: 30 bytes) dropped
+00:00.448 - Generated Packet 4 (size: 80 bytes)
+00:00.450 - Queue full - Packet 4 (size: 80 bytes) dropped
+00:00.558 - Generated Packet 5 (size: 90 bytes)
+00:00.560 - Queue full - Packet 5 (size: 90 bytes) dropped
+00:00.667 - Generated Packet 6 (size: 110 bytes)
+00:00.668 - Queue full - Packet 6 (size: 110 bytes) dropped
+00:00.776 - Generated Packet 7 (size: 120 bytes)
+00:00.777 - Queue full - Packet 7 (size: 120 bytes) dropped
+00:00.886 - Packet 3 (size: 500 bytes) dequeued
+00:00.887 - Generated Packet 8 (size: 130 bytes)
+00:00.996 - Generated Packet 9 (size: 100 bytes)
+00:01.105 - === Packet Generation Complete ===
+00:01.120 - Packet 8 (size: 130 bytes) enqueued for processing
+00:01.231 - Packet 9 (size: 100 bytes) dequeued
+00:01.233 - 
+=== Simulation Statistics ===
+Total Simulation Time: 1.23s
+Total Packets Generated: 10
+Total Packets Processed: 3
+Total Packets Dropped: 6
+Average Processing Time: 0.20s
+Queue Capacity: 1
+===========================
 
-Processed Packet 0:
-  - Size: 10 bytes
-  - Start processing: 1.14s
-  - Completion time: 1.15s
-------------------
+00:01.238 - === All packets processed - Exiting ===

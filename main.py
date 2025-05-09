@@ -1,134 +1,253 @@
 import random
 import time
-class Queue:
-    def __init__(self, capacity):
-        self.items = []
+import sys
+import threading
+from datetime import datetime
+from dataclasses import dataclass
+from typing import Optional, List, Dict
+from queue import Queue as ThreadQueue
+from abc import ABC, abstractmethod
+
+@dataclass
+class Packet:
+    """Represents a network packet with all its properties."""
+    packet_id: int
+    data_size: int
+    creation_time: float
+    arrival_time: float = 0
+    start_processing_time: float = 0
+    completion_time: float = 0
+    delete_time: float = 0
+
+    def __str__(self) -> str:
+        return f"Packet {self.packet_id} (size: {self.data_size} bytes)"
+
+class EventLogger:
+    """Handles logging of simulation events with thread-safe operations."""
+    
+    def __init__(self, start_time: float):
+        self.lock = threading.Lock()
+        self.start_time = start_time
+        self.events_file = "events.txt"
+        self._initialize_log_file()
+
+    def _initialize_log_file(self) -> None:
+        """Initialize the log file with a header."""
+        with open(self.events_file, 'w') as f:
+            f.write("=== Network Simulation Events ===\n\n")
+
+    def _get_elapsed_time(self) -> str:
+        """Calculate and format elapsed time since simulation start."""
+        elapsed_time = time.time() - self.start_time
+        minutes = int(elapsed_time // 60)
+        seconds = elapsed_time % 60
+        return f"{minutes:02d}:{seconds:06.3f}"
+
+    def log_event(self, event: str) -> None:
+        """Log an event with timestamp to both console and file."""
+        with self.lock:
+            timestamp = self._get_elapsed_time()
+            log_message = f"{timestamp} - {event}"
+            print(log_message)
+            with open(self.events_file, 'a') as f:
+                f.write(f"{log_message}\n")
+
+class NetworkLink:
+    """Represents a network link with transmission capabilities."""
+    
+    def __init__(self, speed: int, latency: float = 0.1):
+        self.speed = speed  # bytes per second
+        self.latency = latency  # seconds
+        self.lock = threading.Lock()
+
+    def transmit_packet(self, packet: Packet, sim_start_time: float) -> float:
+        """Transmit a packet through the network link."""
+        with self.lock:
+            transmission_time = (packet.data_size / self.speed) + self.latency
+            time.sleep(transmission_time)
+            packet.arrival_time = time.time() - sim_start_time
+            return transmission_time
+
+class PacketQueue:
+    """Thread-safe queue for managing network packets."""
+    
+    def __init__(self, capacity: int, processing_speed: int = 1000):
+        self.items: List[Packet] = []
         self.capacity = capacity
-        self.processing_speed = 1000  # bytes per second
-        self.current_time = 0
+        self.processing_speed = processing_speed  # bytes per second
+        self.lock = threading.Lock()
+        self.condition = threading.Condition(self.lock)
+        self.stats = {
+            'total_packets': 0,
+            'total_processed': 0,
+            'total_dropped': 0,
+            'total_processing_time': 0,
+            'total_transmission_time': 0
+        }
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """Check if the queue is empty."""
         return len(self.items) == 0
-    
-    def enqueue(self, item):
-        if not self.is_full():
-            self.items.append(item)
-            return True
-        return False
 
-    def dequeue(self):
-        if not self.is_empty():
-            return self.items.pop(0)
-        return None
-
-    def size(self):
-        return len(self.items)
-
-    def print_queue(self):
-        print("Current queue state:")
-        for packet in self.items:
-            print(f"Packet {packet.packet_id} (size: {packet.data_size} bytes)   packet timings: {packet.creation_time} {packet.arrival_time} {packet.start_processing_time} {packet.completion_time}")
-    
-    def is_full(self):
+    def is_full(self) -> bool:
+        """Check if the queue is full."""
         return len(self.items) == self.capacity
 
-    def process_packets(self,sim_start_time):
-        current_time = time.time() - sim_start_time
+    def enqueue(self, packet: Optional[Packet]) -> bool:
+        """Add a packet to the queue if there's space."""
+        with self.lock:
+            if packet is None or not self.is_full():
+                self.items.append(packet)
+                self.condition.notify()
+                return True
+            if packet is not None:
+                self.stats['total_dropped'] += 1
+            return False
+
+    def dequeue(self) -> Optional[Packet]:
+        """Remove and return the first packet from the queue."""
+        with self.lock:
+            return self.items.pop(0) if not self.is_empty() else None
+
+    def get(self) -> Optional[Packet]:
+        """Get the next packet, waiting if the queue is empty."""
+        with self.lock:
+            while self.is_empty():
+                self.condition.wait()
+            return self.items.pop(0)
+
+    def process_packets(self, sim_start_time: float) -> tuple[Optional[Packet], str]:
+        """Process the next packet in the queue."""
+        if self.is_empty():
+            return None, ""
+
         current_packet = self.items[0]
-        time_to_process = current_packet.data_size / self.processing_speed
-        current_packet.start_processing_time = current_time
-        print(f" start Processing packet {current_packet.packet_id} at time {current_time:.2f}s")
-        time.sleep(time_to_process)
-        
-        # Get actual time after processing
-        current_packet.completion_time = time.time() - sim_start_time
-        print(f" completed Processing packet {current_packet.packet_id} at time {current_packet.completion_time:.2f}s")
+        if current_packet is None:
+            return self.dequeue(), ""
 
-        # Remove and return the processed packet
-        return self.dequeue()
-
-class Packets:
-    def __init__(self, packet_id,data_size, creation_time,arrival_time, start_processing_time,completion_time,delete_time):
-        self.packet_id = packet_id
-        self.data_size = data_size   #byte
-        self.creation_time = creation_time
-        self.arrival_time = arrival_time
-        self.start_processing_time = start_processing_time
-        self.completion_time = completion_time
-        self.delete_time = delete_time
-
-    def __str__(self):
-        return f"Packet {self.packet_id} - Arrival Time: {self.arrival_time}, Processing Time: {self.start_processing_time}"
-
-
-def generate_packets(num_packets,sim_start_time):
-    packets = []
-    data_sizes = [10, 20, 30, 500, 80, 90, 110, 120, 130, 100]
-    for i in range(num_packets):
-        create_time = time.time() - sim_start_time  # Calculate relative time
-        packet = Packets(
-            packet_id=i,
-            data_size=data_sizes[i],
-            creation_time=create_time,
-            arrival_time=0,
-            start_processing_time=0,
-            completion_time=0,
-            delete_time=0
-        )
-        packets.append(packet)
-        print(f"Packet {packet.packet_id} created at time {create_time:.2f} s")
-        time.sleep(1)  # Wait 1 second between packet creation
-    return packets
-
-class Netwrok_Link:
-    def __init__(self, speed): 
-        self.speed = speed      # bytes per second
-        self.node_type = "link"
-        self.latency = 0.1      # 100ms latency
-        self.current_time = 0
-
-    def transmit_packet(self, packet,sim_start_time):
-        # Add latency to the packet
         current_time = time.time() - sim_start_time
-        transmission_time = (packet.data_size / self.speed) + self.latency
-        time.sleep(transmission_time)
-        packet.arrival_time = time.time() - sim_start_time
-        return transmission_time
+        time_to_process = current_packet.data_size / self.processing_speed
+
+        current_packet.start_processing_time = current_time
+        time.sleep(time_to_process)
+
+        current_packet.completion_time = time.time() - sim_start_time
+        self.stats['total_processing_time'] += time_to_process
+        self.stats['total_processed'] += 1
+
+        return self.dequeue(), ""
+
+class Simulation:
+    """Main simulation class that coordinates the entire process."""
+    
+    def __init__(self, num_packets: int, queue_capacity: int, network_speed: int):
+        self.sim_start_time = time.time()
+        self.event_logger = EventLogger(self.sim_start_time)
+        self.packet_queue = PacketQueue(queue_capacity)
+        self.network_link = NetworkLink(network_speed)
+        self.num_packets = num_packets
+        self.data_sizes = [10, 20, 30, 500, 80, 90, 110, 120, 130, 100]
+
+    def generate_packets(self) -> None:
+        """Generate packets with specified intervals."""
+        self.event_logger.log_event("=== Starting Packet Generation ===")
+        self.packet_queue.stats['total_packets'] = self.num_packets
+
+        for i in range(self.num_packets):
+            packet = Packet(
+                packet_id=i,
+                data_size=self.data_sizes[i],
+                creation_time=time.time() - self.sim_start_time
+            )
+            self.event_logger.log_event(f"Generated {packet}")
+            
+            if not self.packet_queue.enqueue(packet):
+                self.event_logger.log_event(f"Queue full - {packet} dropped")
+            
+            time.sleep(0.1)  # Simulate time between packet generation
+
+        self.event_logger.log_event("=== Packet Generation Complete ===")
+        self.packet_queue.enqueue(None)  # Signal end of processing
+
+    def process_packets(self) -> None:
+        """Process packets from the queue."""
+        self.event_logger.log_event("=== Starting Packet Processing ===")
+
+        while True:
+            packet = self.packet_queue.get()
+            if packet is None:
+                break
+
+            transmission_time = self.network_link.transmit_packet(packet, self.sim_start_time)
+            self.packet_queue.stats['total_transmission_time'] += transmission_time
+
+            if self.packet_queue.enqueue(packet):
+                self.event_logger.log_event(f"{packet} enqueued for processing")
+            else:
+                self.event_logger.log_event(f"Queue full - {packet} dropped")
+
+            if not self.packet_queue.is_empty():
+                processed_packet, _ = self.packet_queue.process_packets(self.sim_start_time)
+                if processed_packet:
+                    self.event_logger.log_event(f"{processed_packet} dequeued")
+                    if self.packet_queue.stats['total_processed'] == self.num_packets:
+                        self._print_statistics()
+                        self.event_logger.log_event("=== All packets processed - Exiting ===")
+                        sys.exit(0)
+
+        self._print_statistics()
+        self.event_logger.log_event("=== All packets processed - Exiting ===")
+        sys.exit(0)
+
+    def _print_statistics(self) -> None:
+        """Print simulation statistics."""
+        total_time = time.time() - self.sim_start_time
+        stats = [
+            "\n=== Simulation Statistics ===",
+            f"Total Simulation Time: {total_time:.2f}s",
+            f"Total Packets Generated: {self.packet_queue.stats['total_packets']}",
+            f"Total Packets Processed: {self.packet_queue.stats['total_processed']}",
+            f"Total Packets Dropped: {self.packet_queue.stats['total_dropped']}",
+            f"Average Processing Time: {self._calculate_avg_processing_time():.2f}s",
+            f"Queue Capacity: {self.packet_queue.capacity}",
+            "===========================\n"
+        ]
+        self.event_logger.log_event("\n".join(stats))
+
+    def _calculate_avg_processing_time(self) -> float:
+        """Calculate average processing time safely."""
+        if self.packet_queue.stats['total_processed'] > 0:
+            return (self.packet_queue.stats['total_processing_time'] / 
+                   self.packet_queue.stats['total_processed'])
+        return 0.0
+
+    def run(self) -> None:
+        """Run the simulation with proper thread management."""
+        try:
+            generator_thread = threading.Thread(target=self.generate_packets)
+            processor_thread = threading.Thread(target=self.process_packets)
+
+            generator_thread.start()
+            processor_thread.start()
+
+            generator_thread.join()
+            processor_thread.join()
+
+        except KeyboardInterrupt:
+            print("\nSimulation interrupted by user")
+            sys.exit(1)
+        except Exception as e:
+            print(f"\nError in simulation: {str(e)}")
+            sys.exit(1)
 
 def main():
-    sim_start_time = time.time()
-    queue = Queue(10)
-    packets = generate_packets(1,sim_start_time)
-    link = Netwrok_Link(speed=1000)  # 1000 bytes per second
-
-    # Sort packets by creation time
-    packets.sort(key=lambda x: x.creation_time)
-    
-    print("\nProcessing packets:")
-    print("------------------")
-    
-    for packet in packets:
-        # Transmit packet through the link
-        transmission_time = link.transmit_packet(packet,sim_start_time)
-        print(f"Packet {packet.packet_id} transmitted through link:")
-        print(f"  - Transmission time: {transmission_time:.2f}s")
-        print(f"  - Arrival time at queue: {packet.arrival_time:.2f}s")
-        
-        # Enqueue packet
-        if queue.enqueue(packet):
-            print(f"  - Successfully enqueued")
-        else:
-            print(f"  - Queue is full! Packet dropped")
-        
-        # Process packets in queue
-        while not queue.is_empty():
-            processed_packet = queue.process_packets(sim_start_time)
-            if processed_packet:
-                print(f"\nProcessed Packet {processed_packet.packet_id}:")
-                print(f"  - Size: {processed_packet.data_size} bytes")
-                print(f"  - Start processing: {processed_packet.start_processing_time:.2f}s")
-                print(f"  - Completion time: {processed_packet.completion_time:.2f}s")
-        print("------------------")
+    """Main entry point of the simulation."""
+    simulation = Simulation(
+        num_packets=10,
+        queue_capacity=1,
+        network_speed=1000
+    )
+    simulation.run()
 
 if __name__ == "__main__":
     main()
