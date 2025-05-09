@@ -1,0 +1,16 @@
+Packet 0 created at time 0.00 s
+
+Processing packets:
+------------------
+Packet 0 transmitted through link:
+  - Transmission time: 0.11s
+  - Arrival time at queue: 1.14s
+  - Successfully enqueued
+ start Processing packet 0 at time 1.14s
+ completed Processing packet 0 at time 1.15s
+
+Processed Packet 0:
+  - Size: 10 bytes
+  - Start processing: 1.14s
+  - Completion time: 1.15s
+------------------

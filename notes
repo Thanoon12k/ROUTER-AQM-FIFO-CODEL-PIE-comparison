@@ -1,3 +1,6 @@
 git add .
 git commit -m "complete packet creations"
 git push
+
+
+ packets.sort(key=lambda x: x.creation_time)
