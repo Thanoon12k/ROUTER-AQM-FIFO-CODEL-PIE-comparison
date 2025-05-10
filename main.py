@@ -30,7 +30,7 @@ class EventLogger:
     def __init__(self, start_time: float):
         self.lock = threading.Lock()
         self.start_time = start_time
-        self.events_file = "events.txt"
+        self.events_file = "fifo_events.txt"
         self._initialize_log_file()
 
     def _initialize_log_file(self) -> None:
@@ -167,47 +167,68 @@ class StatisticsCollector:
             self.transmission_times.append(queue.stats['total_transmission_time'])
             self.dropped_packets.append(queue.stats['total_dropped'])
 
-    def plot_statistics(self) -> None:
-        """Plot the collected statistics."""
-        plt.figure(figsize=(15, 10))
+    def plot_statistics(self, delay: float = 0.1) -> None:
+        """Plot the collected statistics with animation delay.
         
-        # Plot 1: Throughput over time
-        plt.subplot(2, 2, 1)
-        plt.plot(self.timestamps, self.throughput, 'b-', label='Throughput')
-        plt.xlabel('Simulation Time (s)')
-        plt.ylabel('Throughput (packets/s)')
-        plt.title('Network Throughput Over Time')
-        plt.grid(True)
-        plt.legend()
-
-        # Plot 2: Queue Size over time
-        plt.subplot(2, 2, 2)
-        plt.plot(self.timestamps, self.queue_size, 'r-', label='Queue Size')
-        plt.xlabel('Simulation Time (s)')
-        plt.ylabel('Queue Size')
-        plt.title('Queue Size Over Time')
-        plt.grid(True)
-        plt.legend()
-
-        # Plot 3: Processing Time over time
-        plt.subplot(2, 2, 3)
-        plt.plot(self.timestamps, self.processing_times, 'g-', label='Processing Time')
-        plt.xlabel('Simulation Time (s)')
-        plt.ylabel('Total Processing Time (s)')
-        plt.title('Cumulative Processing Time')
-        plt.grid(True)
-        plt.legend()
-
-        # Plot 4: Dropped Packets over time
-        plt.subplot(2, 2, 4)
-        plt.plot(self.timestamps, self.dropped_packets, 'm-', label='Dropped Packets')
-        plt.xlabel('Simulation Time (s)')
-        plt.ylabel('Number of Dropped Packets')
-        plt.title('Cumulative Dropped Packets')
-        plt.grid(True)
-        plt.legend()
-
-        plt.tight_layout()
+        Args:
+            delay (float): Delay between plot updates in seconds. Default is 0.1.
+        """
+        plt.ion()  # Turn on interactive mode
+        fig = plt.figure(figsize=(10, 20))
+        
+        # Create subplots
+        ax1 = plt.subplot(4, 1, 1)
+        ax2 = plt.subplot(4, 1, 2)
+        ax3 = plt.subplot(4, 1, 3)
+        ax4 = plt.subplot(4, 1, 4)
+        
+        # Initialize lines
+        line1, = ax1.plot([], [], 'b-', label='Throughput (packets/s)')
+        line2, = ax2.plot([], [], 'r-', label='Queue Size (packets)')
+        line3, = ax3.plot([], [], 'g-', label='Processing Time (s)')
+        line4, = ax4.plot([], [], 'm-', label='Dropped Packets (count)')
+        
+        # Set up axes labels and grid for all subplots
+        for ax in [ax1, ax2, ax3, ax4]:
+            ax.set_xlabel('Simulation Time (s)', fontsize=6)
+            ax.grid(True)
+            ax.legend()
+        
+        ax1.set_ylabel('Throughput', fontsize=6)
+        ax2.set_ylabel('Queue Size', fontsize=6)
+        ax3.set_ylabel('Processing Time (s)', fontsize=6)
+        ax4.set_ylabel('Dropped Packets', fontsize=6)
+        
+        plt.subplots_adjust(
+            top=0.95,
+            bottom=0.05,
+            left=0.1,
+            right=0.95,
+            hspace=0.4,
+            wspace=0.2
+        )
+        
+        # Update plots with animation
+        for i in range(len(self.timestamps)):
+            line1.set_data(self.timestamps[:i+1], self.throughput[:i+1])
+            line2.set_data(self.timestamps[:i+1], self.queue_size[:i+1])
+            line3.set_data(self.timestamps[:i+1], self.processing_times[:i+1])
+            line4.set_data(self.timestamps[:i+1], self.dropped_packets[:i+1])
+            
+            # Update y-axis limits dynamically
+            for ax, data in [(ax1, self.throughput[:i+1]), 
+                            (ax2, self.queue_size[:i+1]),
+                            (ax3, self.processing_times[:i+1]),
+                            (ax4, self.dropped_packets[:i+1])]:
+                if data:
+                    ax.set_ylim(min(data) * 0.9, max(data) * 1.1)
+                ax.set_xlim(self.timestamps[0], self.timestamps[-1])
+            
+            fig.canvas.draw()
+            fig.canvas.flush_events()
+            plt.pause(delay)
+        
+        plt.ioff()  # Turn off interactive mode
         plt.show()
 
 class Simulation:

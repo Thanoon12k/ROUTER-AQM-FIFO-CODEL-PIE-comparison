@@ -1,0 +1,434 @@
+=== Network Simulation Events ===
+
+00:00.002 - === Starting Packet Generation ===
+00:00.003 - === Starting Packet Processing ===
+00:00.004 - Generated Packet 0 (size: 10 bytes)
+00:00.117 - Generated Packet 1 (size: 20 bytes)
+00:00.118 - Packet 0 (size: 10 bytes) enqueued for processing
+00:00.133 - Packet 0 (size: 10 bytes) dequeued
+00:00.227 - Generated Packet 2 (size: 30 bytes)
+00:00.258 - Packet 1 (size: 20 bytes) enqueued for processing
+00:00.290 - Packet 2 (size: 30 bytes) dequeued
+00:00.337 - Generated Packet 3 (size: 500 bytes)
+00:00.417 - Packet 1 (size: 20 bytes) enqueued for processing
+00:00.448 - Generated Packet 4 (size: 80 bytes)
+00:00.557 - Generated Packet 5 (size: 90 bytes)
+00:00.667 - Generated Packet 6 (size: 110 bytes)
+00:00.776 - Generated Packet 7 (size: 120 bytes)
+00:00.777 - Queue full - Packet 7 (size: 120 bytes) dropped
+00:00.887 - Generated Packet 8 (size: 130 bytes)
+00:00.888 - Queue full - Packet 8 (size: 130 bytes) dropped
+00:00.934 - Packet 3 (size: 500 bytes) dequeued
+00:00.997 - Generated Packet 9 (size: 100 bytes)
+00:01.060 - Packet 1 (size: 20 bytes) enqueued for processing
+00:01.107 - Generated Packet 10 (size: 10 bytes)
+00:01.108 - Queue full - Packet 10 (size: 10 bytes) dropped
+00:01.154 - Packet 4 (size: 80 bytes) dequeued
+00:01.215 - Generated Packet 11 (size: 20 bytes)
+00:01.325 - Generated Packet 12 (size: 30 bytes)
+00:01.357 - Queue full - Packet 5 (size: 90 bytes) dropped
+00:01.435 - Generated Packet 13 (size: 500 bytes)
+00:01.436 - Queue full - Packet 13 (size: 500 bytes) dropped
+00:01.481 - Packet 6 (size: 110 bytes) dequeued
+00:01.543 - Generated Packet 14 (size: 80 bytes)
+00:01.654 - Generated Packet 15 (size: 90 bytes)
+00:01.685 - Queue full - Packet 9 (size: 100 bytes) dropped
+00:01.716 - Packet 1 (size: 20 bytes) dequeued
+00:01.763 - Generated Packet 16 (size: 110 bytes)
+00:01.842 - Packet 11 (size: 20 bytes) enqueued for processing
+00:01.874 - Generated Packet 17 (size: 120 bytes)
+00:01.875 - Queue full - Packet 17 (size: 120 bytes) dropped
+00:01.889 - Packet 12 (size: 30 bytes) dequeued
+00:01.984 - Generated Packet 18 (size: 130 bytes)
+00:02.077 - Packet 14 (size: 80 bytes) enqueued for processing
+00:02.093 - Generated Packet 19 (size: 100 bytes)
+00:02.094 - Queue full - Packet 19 (size: 100 bytes) dropped
+00:02.173 - Packet 15 (size: 90 bytes) dequeued
+00:02.204 - Generated Packet 20 (size: 10 bytes)
+00:02.315 - Generated Packet 21 (size: 20 bytes)
+00:02.392 - Queue full - Packet 16 (size: 110 bytes) dropped
+00:02.424 - Generated Packet 22 (size: 30 bytes)
+00:02.424 - Packet 11 (size: 20 bytes) dequeued
+00:02.534 - Generated Packet 23 (size: 500 bytes)
+00:02.645 - Generated Packet 24 (size: 80 bytes)
+00:02.646 - Queue full - Packet 24 (size: 80 bytes) dropped
+00:02.661 - Queue full - Packet 18 (size: 130 bytes) dropped
+00:02.755 - Generated Packet 25 (size: 90 bytes)
+00:02.756 - Packet 14 (size: 80 bytes) dequeued
+00:02.863 - Generated Packet 26 (size: 110 bytes)
+00:02.878 - Queue full - Packet 20 (size: 10 bytes) dropped
+00:02.910 - Packet 21 (size: 20 bytes) dequeued
+00:02.972 - Generated Packet 27 (size: 120 bytes)
+00:03.051 - Packet 22 (size: 30 bytes) enqueued for processing
+00:03.083 - Generated Packet 28 (size: 130 bytes)
+00:03.084 - Queue full - Packet 28 (size: 130 bytes) dropped
+00:03.193 - Generated Packet 29 (size: 100 bytes)
+00:03.194 - Queue full - Packet 29 (size: 100 bytes) dropped
+00:03.304 - Generated Packet 30 (size: 10 bytes)
+00:03.304 - Queue full - Packet 30 (size: 10 bytes) dropped
+00:03.414 - Generated Packet 31 (size: 20 bytes)
+00:03.416 - Queue full - Packet 31 (size: 20 bytes) dropped
+00:03.525 - Generated Packet 32 (size: 30 bytes)
+00:03.525 - Queue full - Packet 32 (size: 30 bytes) dropped
+00:03.557 - Packet 23 (size: 500 bytes) dequeued
+00:03.636 - Generated Packet 33 (size: 500 bytes)
+00:03.745 - Generated Packet 34 (size: 80 bytes)
+00:03.761 - Queue full - Packet 25 (size: 90 bytes) dropped
+00:03.854 - Generated Packet 35 (size: 90 bytes)
+00:03.856 - Queue full - Packet 35 (size: 90 bytes) dropped
+00:03.885 - Packet 26 (size: 110 bytes) dequeued
+00:03.963 - Generated Packet 36 (size: 110 bytes)
+00:04.072 - Generated Packet 37 (size: 120 bytes)
+00:04.119 - Queue full - Packet 27 (size: 120 bytes) dropped
+00:04.151 - Packet 22 (size: 30 bytes) dequeued
+00:04.183 - Generated Packet 38 (size: 130 bytes)
+00:04.292 - Generated Packet 39 (size: 100 bytes)
+00:04.401 - Generated Packet 40 (size: 10 bytes)
+00:04.403 - Queue full - Packet 40 (size: 10 bytes) dropped
+00:04.510 - Generated Packet 41 (size: 20 bytes)
+00:04.511 - Queue full - Packet 41 (size: 20 bytes) dropped
+00:04.619 - Generated Packet 42 (size: 30 bytes)
+00:04.620 - Queue full - Packet 42 (size: 30 bytes) dropped
+00:04.728 - Generated Packet 43 (size: 500 bytes)
+00:04.728 - Queue full - Packet 43 (size: 500 bytes) dropped
+00:04.759 - Queue full - Packet 33 (size: 500 bytes) dropped
+00:04.839 - Generated Packet 44 (size: 80 bytes)
+00:04.840 - Queue full - Packet 44 (size: 80 bytes) dropped
+00:04.855 - Packet 34 (size: 80 bytes) dequeued
+00:04.949 - Generated Packet 45 (size: 90 bytes)
+00:05.059 - Generated Packet 46 (size: 110 bytes)
+00:05.075 - Queue full - Packet 36 (size: 110 bytes) dropped
+00:05.169 - Generated Packet 47 (size: 120 bytes)
+00:05.170 - Queue full - Packet 47 (size: 120 bytes) dropped
+00:05.201 - Packet 37 (size: 120 bytes) dequeued
+00:05.280 - Generated Packet 48 (size: 130 bytes)
+00:05.390 - Generated Packet 49 (size: 100 bytes)
+00:05.436 - Queue full - Packet 38 (size: 130 bytes) dropped
+00:05.498 - Generated Packet 50 (size: 10 bytes)
+00:05.499 - Queue full - Packet 50 (size: 10 bytes) dropped
+00:05.546 - Packet 39 (size: 100 bytes) dequeued
+00:05.622 - Generated Packet 51 (size: 20 bytes)
+00:05.734 - Generated Packet 52 (size: 30 bytes)
+00:05.749 - Queue full - Packet 45 (size: 90 bytes) dropped
+00:05.842 - Generated Packet 53 (size: 500 bytes)
+00:05.844 - Queue full - Packet 53 (size: 500 bytes) dropped
+00:05.874 - Packet 46 (size: 110 bytes) dequeued
+00:05.953 - Generated Packet 54 (size: 80 bytes)
+00:06.061 - Generated Packet 55 (size: 90 bytes)
+00:06.108 - Queue full - Packet 48 (size: 130 bytes) dropped
+00:06.172 - Generated Packet 56 (size: 110 bytes)
+00:06.174 - Queue full - Packet 56 (size: 110 bytes) dropped
+00:06.218 - Packet 49 (size: 100 bytes) dequeued
+00:06.281 - Generated Packet 57 (size: 120 bytes)
+00:06.343 - Packet 51 (size: 20 bytes) enqueued for processing
+00:06.389 - Generated Packet 58 (size: 130 bytes)
+00:06.390 - Packet 52 (size: 30 bytes) dequeued
+00:06.499 - Generated Packet 59 (size: 100 bytes)
+00:06.577 - Queue full - Packet 54 (size: 80 bytes) dropped
+00:06.609 - Generated Packet 60 (size: 10 bytes)
+00:06.610 - Queue full - Packet 60 (size: 10 bytes) dropped
+00:06.688 - Packet 55 (size: 90 bytes) dequeued
+00:06.719 - Generated Packet 61 (size: 20 bytes)
+00:06.830 - Generated Packet 62 (size: 30 bytes)
+00:06.923 - Queue full - Packet 57 (size: 120 bytes) dropped
+00:06.939 - Generated Packet 63 (size: 500 bytes)
+00:06.939 - Queue full - Packet 63 (size: 500 bytes) dropped
+00:06.955 - Packet 51 (size: 20 bytes) dequeued
+00:07.047 - Generated Packet 64 (size: 80 bytes)
+00:07.157 - Generated Packet 65 (size: 90 bytes)
+00:07.188 - Queue full - Packet 58 (size: 130 bytes) dropped
+00:07.265 - Generated Packet 66 (size: 110 bytes)
+00:07.266 - Queue full - Packet 66 (size: 110 bytes) dropped
+00:07.296 - Packet 59 (size: 100 bytes) dequeued
+00:07.385 - Generated Packet 67 (size: 120 bytes)
+00:07.425 - Packet 61 (size: 20 bytes) enqueued for processing
+00:07.504 - Packet 62 (size: 30 bytes) dequeued
+00:07.535 - Generated Packet 68 (size: 130 bytes)
+00:07.643 - Generated Packet 69 (size: 100 bytes)
+00:07.689 - Queue full - Packet 64 (size: 80 bytes) dropped
+00:07.752 - Generated Packet 70 (size: 10 bytes)
+00:07.753 - Queue full - Packet 70 (size: 10 bytes) dropped
+00:07.783 - Packet 65 (size: 90 bytes) dequeued
+00:07.860 - Generated Packet 71 (size: 20 bytes)
+00:07.908 - Packet 61 (size: 20 bytes) enqueued for processing
+00:07.972 - Generated Packet 72 (size: 30 bytes)
+00:07.973 - Queue full - Packet 72 (size: 30 bytes) dropped
+00:08.034 - Packet 67 (size: 120 bytes) dequeued
+00:08.081 - Generated Packet 73 (size: 500 bytes)
+00:08.204 - Generated Packet 74 (size: 80 bytes)
+00:08.282 - Queue full - Packet 68 (size: 130 bytes) dropped
+00:08.313 - Generated Packet 75 (size: 90 bytes)
+00:08.314 - Queue full - Packet 75 (size: 90 bytes) dropped
+00:08.389 - Packet 69 (size: 100 bytes) dequeued
+00:08.421 - Generated Packet 76 (size: 110 bytes)
+00:08.516 - Packet 71 (size: 20 bytes) enqueued for processing
+00:08.531 - Generated Packet 77 (size: 120 bytes)
+00:08.533 - Queue full - Packet 77 (size: 120 bytes) dropped
+00:08.547 - Packet 61 (size: 20 bytes) dequeued
+00:08.642 - Generated Packet 78 (size: 130 bytes)
+00:08.751 - Generated Packet 79 (size: 100 bytes)
+00:08.859 - Generated Packet 80 (size: 10 bytes)
+00:08.861 - Queue full - Packet 80 (size: 10 bytes) dropped
+00:08.968 - Generated Packet 81 (size: 20 bytes)
+00:08.970 - Queue full - Packet 81 (size: 20 bytes) dropped
+00:09.077 - Generated Packet 82 (size: 30 bytes)
+00:09.079 - Queue full - Packet 82 (size: 30 bytes) dropped
+00:09.154 - Queue full - Packet 73 (size: 500 bytes) dropped
+00:09.185 - Generated Packet 83 (size: 500 bytes)
+00:09.186 - Queue full - Packet 83 (size: 500 bytes) dropped
+00:09.249 - Packet 74 (size: 80 bytes) dequeued
+00:09.296 - Generated Packet 84 (size: 80 bytes)
+00:09.406 - Generated Packet 85 (size: 90 bytes)
+00:09.470 - Queue full - Packet 76 (size: 110 bytes) dropped
+00:09.501 - Packet 71 (size: 20 bytes) dequeued
+00:09.517 - Generated Packet 86 (size: 110 bytes)
+00:09.626 - Generated Packet 87 (size: 120 bytes)
+00:09.736 - Queue full - Packet 78 (size: 130 bytes) dropped
+00:09.737 - Generated Packet 88 (size: 130 bytes)
+00:09.739 - Queue full - Packet 88 (size: 130 bytes) dropped
+00:09.847 - Generated Packet 89 (size: 100 bytes)
+00:09.848 - Packet 79 (size: 100 bytes) dequeued
+00:09.958 - Generated Packet 90 (size: 10 bytes)
+00:10.037 - Queue full - Packet 84 (size: 80 bytes) dropped
+00:10.068 - Generated Packet 91 (size: 20 bytes)
+00:10.069 - Queue full - Packet 91 (size: 20 bytes) dropped
+00:10.131 - Packet 85 (size: 90 bytes) dequeued
+00:10.178 - Generated Packet 92 (size: 30 bytes)
+00:10.287 - Generated Packet 93 (size: 500 bytes)
+00:10.350 - Queue full - Packet 86 (size: 110 bytes) dropped
+00:10.397 - Generated Packet 94 (size: 80 bytes)
+00:10.399 - Queue full - Packet 94 (size: 80 bytes) dropped
+00:10.476 - Packet 87 (size: 120 bytes) dequeued
+00:10.507 - Generated Packet 95 (size: 90 bytes)
+00:10.619 - Generated Packet 96 (size: 110 bytes)
+00:10.680 - Queue full - Packet 89 (size: 100 bytes) dropped
+00:10.696 - Packet 90 (size: 10 bytes) dequeued
+00:10.727 - Generated Packet 97 (size: 120 bytes)
+00:10.842 - Packet 92 (size: 30 bytes) enqueued for processing
+00:10.843 - Generated Packet 98 (size: 130 bytes)
+00:10.844 - Queue full - Packet 98 (size: 130 bytes) dropped
+00:10.952 - Generated Packet 99 (size: 100 bytes)
+00:10.953 - Queue full - Packet 99 (size: 100 bytes) dropped
+00:11.062 - Generated Packet 100 (size: 10 bytes)
+00:11.062 - Queue full - Packet 100 (size: 10 bytes) dropped
+00:11.173 - Generated Packet 101 (size: 20 bytes)
+00:11.174 - Queue full - Packet 101 (size: 20 bytes) dropped
+00:11.284 - Generated Packet 102 (size: 30 bytes)
+00:11.284 - Queue full - Packet 102 (size: 30 bytes) dropped
+00:11.346 - Packet 93 (size: 500 bytes) dequeued
+00:11.393 - Generated Packet 103 (size: 500 bytes)
+00:11.504 - Generated Packet 104 (size: 80 bytes)
+00:11.551 - Queue full - Packet 95 (size: 90 bytes) dropped
+00:11.615 - Generated Packet 105 (size: 90 bytes)
+00:11.615 - Queue full - Packet 105 (size: 90 bytes) dropped
+00:11.678 - Packet 96 (size: 110 bytes) dequeued
+00:11.725 - Generated Packet 106 (size: 110 bytes)
+00:11.836 - Generated Packet 107 (size: 120 bytes)
+00:11.900 - Queue full - Packet 97 (size: 120 bytes) dropped
+00:11.933 - Packet 92 (size: 30 bytes) dequeued
+00:11.948 - Generated Packet 108 (size: 130 bytes)
+00:12.058 - Generated Packet 109 (size: 100 bytes)
+00:12.168 - Generated Packet 110 (size: 10 bytes)
+00:12.169 - Queue full - Packet 110 (size: 10 bytes) dropped
+00:12.279 - Generated Packet 111 (size: 20 bytes)
+00:12.280 - Queue full - Packet 111 (size: 20 bytes) dropped
+00:12.387 - Generated Packet 112 (size: 30 bytes)
+00:12.388 - Queue full - Packet 112 (size: 30 bytes) dropped
+00:12.499 - Generated Packet 113 (size: 500 bytes)
+00:12.499 - Queue full - Packet 113 (size: 500 bytes) dropped
+00:12.545 - Queue full - Packet 103 (size: 500 bytes) dropped
+00:12.610 - Generated Packet 114 (size: 80 bytes)
+00:12.636 - Queue full - Packet 114 (size: 80 bytes) dropped
+00:12.645 - Packet 104 (size: 80 bytes) dequeued
+00:12.752 - Generated Packet 115 (size: 90 bytes)
+00:12.861 - Generated Packet 116 (size: 110 bytes)
+00:12.892 - Queue full - Packet 106 (size: 110 bytes) dropped
+00:12.971 - Generated Packet 117 (size: 120 bytes)
+00:12.973 - Queue full - Packet 117 (size: 120 bytes) dropped
+00:13.019 - Packet 107 (size: 120 bytes) dequeued
+00:13.081 - Generated Packet 118 (size: 130 bytes)
+00:13.191 - Generated Packet 119 (size: 100 bytes)
+00:13.255 - Queue full - Packet 108 (size: 130 bytes) dropped
+00:13.302 - Generated Packet 120 (size: 10 bytes)
+00:13.303 - Queue full - Packet 120 (size: 10 bytes) dropped
+00:13.365 - Packet 109 (size: 100 bytes) dequeued
+00:13.412 - Generated Packet 121 (size: 20 bytes)
+00:13.521 - Generated Packet 122 (size: 30 bytes)
+00:13.568 - Queue full - Packet 115 (size: 90 bytes) dropped
+00:13.630 - Generated Packet 123 (size: 500 bytes)
+00:13.630 - Queue full - Packet 123 (size: 500 bytes) dropped
+00:13.693 - Packet 116 (size: 110 bytes) dequeued
+00:13.739 - Generated Packet 124 (size: 80 bytes)
+00:13.849 - Generated Packet 125 (size: 90 bytes)
+00:13.926 - Queue full - Packet 118 (size: 130 bytes) dropped
+00:13.958 - Generated Packet 126 (size: 110 bytes)
+00:13.959 - Queue full - Packet 126 (size: 110 bytes) dropped
+00:14.037 - Packet 119 (size: 100 bytes) dequeued
+00:14.068 - Generated Packet 127 (size: 120 bytes)
+00:14.164 - Packet 121 (size: 20 bytes) enqueued for processing
+00:14.180 - Generated Packet 128 (size: 130 bytes)
+00:14.181 - Queue full - Packet 128 (size: 130 bytes) dropped
+00:14.195 - Packet 122 (size: 30 bytes) dequeued
+00:14.289 - Generated Packet 129 (size: 100 bytes)
+00:14.382 - Packet 124 (size: 80 bytes) enqueued for processing
+00:14.398 - Generated Packet 130 (size: 10 bytes)
+00:14.399 - Queue full - Packet 130 (size: 10 bytes) dropped
+00:14.476 - Packet 125 (size: 90 bytes) dequeued
+00:14.507 - Generated Packet 131 (size: 20 bytes)
+00:14.618 - Generated Packet 132 (size: 30 bytes)
+00:14.712 - Queue full - Packet 127 (size: 120 bytes) dropped
+00:14.728 - Generated Packet 133 (size: 500 bytes)
+00:14.729 - Queue full - Packet 133 (size: 500 bytes) dropped
+00:14.743 - Packet 121 (size: 20 bytes) dequeued
+00:14.838 - Generated Packet 134 (size: 80 bytes)
+00:14.942 - Generated Packet 135 (size: 90 bytes)
+00:14.957 - Queue full - Packet 129 (size: 100 bytes) dropped
+00:15.052 - Packet 124 (size: 80 bytes) dequeued
+00:15.053 - Generated Packet 136 (size: 110 bytes)
+00:15.161 - Generated Packet 137 (size: 120 bytes)
+00:15.177 - Queue full - Packet 131 (size: 20 bytes) dropped
+00:15.224 - Packet 132 (size: 30 bytes) dequeued
+00:15.271 - Generated Packet 138 (size: 130 bytes)
+00:15.382 - Generated Packet 139 (size: 100 bytes)
+00:15.412 - Queue full - Packet 134 (size: 80 bytes) dropped
+00:15.491 - Generated Packet 140 (size: 10 bytes)
+00:15.492 - Queue full - Packet 140 (size: 10 bytes) dropped
+00:15.506 - Packet 135 (size: 90 bytes) dequeued
+00:15.602 - Generated Packet 141 (size: 20 bytes)
+00:15.717 - Generated Packet 142 (size: 30 bytes)
+00:15.733 - Queue full - Packet 136 (size: 110 bytes) dropped
+00:15.826 - Generated Packet 143 (size: 500 bytes)
+00:15.827 - Queue full - Packet 143 (size: 500 bytes) dropped
+00:15.857 - Packet 137 (size: 120 bytes) dequeued
+00:15.937 - Generated Packet 144 (size: 80 bytes)
+00:16.046 - Generated Packet 145 (size: 90 bytes)
+00:16.093 - Queue full - Packet 138 (size: 130 bytes) dropped
+00:16.155 - Generated Packet 146 (size: 110 bytes)
+00:16.157 - Queue full - Packet 146 (size: 110 bytes) dropped
+00:16.203 - Packet 139 (size: 100 bytes) dequeued
+00:16.265 - Generated Packet 147 (size: 120 bytes)
+00:16.327 - Packet 141 (size: 20 bytes) enqueued for processing
+00:16.373 - Generated Packet 148 (size: 130 bytes)
+00:16.374 - Packet 142 (size: 30 bytes) dequeued
+00:16.482 - Generated Packet 149 (size: 100 bytes)
+00:16.559 - Queue full - Packet 144 (size: 80 bytes) dropped
+00:16.590 - Generated Packet 150 (size: 10 bytes)
+00:16.590 - Queue full - Packet 150 (size: 10 bytes) dropped
+00:16.667 - Packet 145 (size: 90 bytes) dequeued
+00:16.698 - Generated Packet 151 (size: 20 bytes)
+00:16.806 - Generated Packet 152 (size: 30 bytes)
+00:16.899 - Queue full - Packet 147 (size: 120 bytes) dropped
+00:16.914 - Generated Packet 153 (size: 500 bytes)
+00:16.915 - Queue full - Packet 153 (size: 500 bytes) dropped
+00:16.930 - Packet 141 (size: 20 bytes) dequeued
+00:17.022 - Generated Packet 154 (size: 80 bytes)
+00:17.131 - Generated Packet 155 (size: 90 bytes)
+00:17.162 - Queue full - Packet 148 (size: 130 bytes) dropped
+00:17.239 - Generated Packet 156 (size: 110 bytes)
+00:17.239 - Queue full - Packet 156 (size: 110 bytes) dropped
+00:17.269 - Packet 149 (size: 100 bytes) dequeued
+00:17.348 - Generated Packet 157 (size: 120 bytes)
+00:17.394 - Packet 151 (size: 20 bytes) enqueued for processing
+00:17.441 - Packet 152 (size: 30 bytes) dequeued
+00:17.457 - Generated Packet 158 (size: 130 bytes)
+00:17.568 - Generated Packet 159 (size: 100 bytes)
+00:17.632 - Queue full - Packet 154 (size: 80 bytes) dropped
+00:17.679 - Generated Packet 160 (size: 10 bytes)
+00:17.679 - Queue full - Packet 160 (size: 10 bytes) dropped
+00:17.724 - Packet 155 (size: 90 bytes) dequeued
+00:17.787 - Generated Packet 161 (size: 20 bytes)
+00:17.895 - Generated Packet 162 (size: 30 bytes)
+00:17.957 - Queue full - Packet 157 (size: 120 bytes) dropped
+00:17.988 - Packet 151 (size: 20 bytes) dequeued
+00:18.004 - Generated Packet 163 (size: 500 bytes)
+00:18.114 - Generated Packet 164 (size: 80 bytes)
+00:18.223 - Queue full - Packet 158 (size: 130 bytes) dropped
+00:18.223 - Generated Packet 165 (size: 90 bytes)
+00:18.224 - Queue full - Packet 165 (size: 90 bytes) dropped
+00:18.330 - Generated Packet 166 (size: 110 bytes)
+00:18.331 - Packet 159 (size: 100 bytes) dequeued
+00:18.456 - Generated Packet 167 (size: 120 bytes)
+00:18.466 - Queue full - Packet 161 (size: 20 bytes) dropped
+00:18.526 - Packet 162 (size: 30 bytes) dequeued
+00:18.571 - Generated Packet 168 (size: 130 bytes)
+00:18.682 - Generated Packet 169 (size: 100 bytes)
+00:18.790 - Generated Packet 170 (size: 10 bytes)
+00:18.791 - Queue full - Packet 170 (size: 10 bytes) dropped
+00:18.899 - Generated Packet 171 (size: 20 bytes)
+00:18.900 - Queue full - Packet 171 (size: 20 bytes) dropped
+00:19.010 - Generated Packet 172 (size: 30 bytes)
+00:19.012 - Queue full - Packet 172 (size: 30 bytes) dropped
+00:19.117 - Generated Packet 173 (size: 500 bytes)
+00:19.119 - Queue full - Packet 173 (size: 500 bytes) dropped
+00:19.148 - Queue full - Packet 163 (size: 500 bytes) dropped
+00:19.226 - Generated Packet 174 (size: 80 bytes)
+00:19.229 - Queue full - Packet 174 (size: 80 bytes) dropped
+00:19.243 - Packet 164 (size: 80 bytes) dequeued
+00:19.336 - Generated Packet 175 (size: 90 bytes)
+00:19.443 - Generated Packet 176 (size: 110 bytes)
+00:19.460 - Queue full - Packet 166 (size: 110 bytes) dropped
+00:19.552 - Generated Packet 177 (size: 120 bytes)
+00:19.552 - Queue full - Packet 177 (size: 120 bytes) dropped
+00:19.599 - Packet 167 (size: 120 bytes) dequeued
+00:19.662 - Generated Packet 178 (size: 130 bytes)
+00:19.770 - Generated Packet 179 (size: 100 bytes)
+00:19.832 - Queue full - Packet 168 (size: 130 bytes) dropped
+00:19.880 - Generated Packet 180 (size: 10 bytes)
+00:19.881 - Queue full - Packet 180 (size: 10 bytes) dropped
+00:19.941 - Packet 169 (size: 100 bytes) dequeued
+00:19.988 - Generated Packet 181 (size: 20 bytes)
+00:20.097 - Generated Packet 182 (size: 30 bytes)
+00:20.145 - Queue full - Packet 175 (size: 90 bytes) dropped
+00:20.208 - Generated Packet 183 (size: 500 bytes)
+00:20.208 - Queue full - Packet 183 (size: 500 bytes) dropped
+00:20.270 - Packet 176 (size: 110 bytes) dequeued
+00:20.316 - Generated Packet 184 (size: 80 bytes)
+00:20.423 - Generated Packet 185 (size: 90 bytes)
+00:20.502 - Queue full - Packet 178 (size: 130 bytes) dropped
+00:20.533 - Generated Packet 186 (size: 110 bytes)
+00:20.535 - Queue full - Packet 186 (size: 110 bytes) dropped
+00:20.612 - Packet 179 (size: 100 bytes) dequeued
+00:20.643 - Generated Packet 187 (size: 120 bytes)
+00:20.736 - Packet 181 (size: 20 bytes) enqueued for processing
+00:20.751 - Generated Packet 188 (size: 130 bytes)
+00:20.752 - Queue full - Packet 188 (size: 130 bytes) dropped
+00:20.782 - Packet 182 (size: 30 bytes) dequeued
+00:20.860 - Generated Packet 189 (size: 100 bytes)
+00:20.969 - Packet 184 (size: 80 bytes) enqueued for processing
+00:20.969 - Generated Packet 190 (size: 10 bytes)
+00:20.970 - Queue full - Packet 190 (size: 10 bytes) dropped
+00:21.062 - Packet 185 (size: 90 bytes) dequeued
+00:21.078 - Generated Packet 191 (size: 20 bytes)
+00:21.188 - Generated Packet 192 (size: 30 bytes)
+00:21.296 - Generated Packet 193 (size: 500 bytes)
+00:21.296 - Queue full - Packet 193 (size: 500 bytes) dropped
+00:21.297 - Queue full - Packet 187 (size: 120 bytes) dropped
+00:21.328 - Packet 181 (size: 20 bytes) dequeued
+00:21.405 - Generated Packet 194 (size: 80 bytes)
+00:21.514 - Generated Packet 195 (size: 90 bytes)
+00:21.530 - Queue full - Packet 189 (size: 100 bytes) dropped
+00:21.624 - Generated Packet 196 (size: 110 bytes)
+00:21.626 - Packet 184 (size: 80 bytes) dequeued
+00:21.734 - Generated Packet 197 (size: 120 bytes)
+00:21.750 - Queue full - Packet 191 (size: 20 bytes) dropped
+00:21.796 - Packet 192 (size: 30 bytes) dequeued
+00:21.842 - Generated Packet 198 (size: 130 bytes)
+00:21.950 - Generated Packet 199 (size: 100 bytes)
+00:21.982 - Queue full - Packet 194 (size: 80 bytes) dropped
+00:22.060 - === Packet Generation Complete ===
+00:22.076 - Packet 195 (size: 90 bytes) dequeued
+00:22.296 - Packet 196 (size: 110 bytes) enqueued for processing
+00:22.423 - Packet 197 (size: 120 bytes) dequeued
+00:22.656 - Packet 198 (size: 130 bytes) enqueued for processing
+00:22.773 - Packet 199 (size: 100 bytes) dequeued
+00:22.774 - 
+=== Simulation Statistics ===
+Total Simulation Time: 22.77s
+Total Packets Generated: 200
+Total Packets Processed: 72
+Total Packets Dropped: 126
+Average Processing Time: 0.09s
+Queue Capacity: 5
+===========================
+
+00:22.776 - === All packets processed - Exiting ===
