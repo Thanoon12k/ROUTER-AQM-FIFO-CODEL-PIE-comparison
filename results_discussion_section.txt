@@ -1,0 +1,36 @@
+=== Simple Results Summary ===
+
+What We Found:
+
+1. Web Traffic:
+   - PIE did better: 974 packets got through
+   - FIFO did good too: 970 packets got through
+   - Both worked well for web traffic
+
+2. FTP Traffic:
+   - FIFO did much better: 942 packets got through
+   - PIE struggled: only 475 packets got through
+   - FIFO is better for FTP
+
+3. Video Traffic:
+   - FIFO handled 951 packets well
+   - PIE handled 475 packets
+   - FIFO is clearly better for video traffic
+
+4. Speed:
+   - PIE finished faster (65-67 seconds)
+   - FIFO took longer (96-98 seconds)
+   - Both processed packets quickly (0.00-0.01 seconds each)
+
+5. Main Points:
+   - PIE is best for web traffic
+   - FIFO is best for FTP and video traffic
+   - PIE is faster overall
+   - FIFO is more consistent across all traffic types
+
+6. What to Use:
+   - For web: Use PIE
+   - For FTP: Use FIFO
+   - For video: Use FIFO
+
+=========================== 

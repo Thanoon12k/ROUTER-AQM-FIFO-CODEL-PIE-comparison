@@ -1,0 +1,57 @@
+=== FIFO FTP Simulation Results ===
+Total Simulation Time: 98.03s
+Total Packets Generated: 1000
+Total Packets Processed: 942
+Total Packets Dropped: 58
+Average Processing Time: 0.01s
+Queue Capacity: 500
+===========================
+
+=== FIFO Video Simulation Results ===
+Total Simulation Time: 97.16s
+Total Packets Generated: 1000
+Total Packets Processed: 951
+Total Packets Dropped: 49
+Average Processing Time: 0.01s
+Queue Capacity: 500
+===========================
+
+=== FIFO Web Simulation Results ===
+Total Simulation Time: 96.62s
+Total Packets Generated: 1000
+Total Packets Processed: 970
+Total Packets Dropped: 30
+Average Processing Time: 0.00s
+Queue Capacity: 500
+===========================
+
+=== PIE Web Simulation Results ===
+Total Simulation Time: 65.60s
+Total Packets Generated: 1000
+Total Packets Processed: 974
+Total Packets Dropped: 26
+Average Processing Time: 0.00s
+Average Queue Delay: 0.00s
+Queue Capacity: 500
+===========================
+
+=== PIE FTP Simulation Results ===
+Total Simulation Time: 67.76s
+Total Packets Generated: 1000
+Total Packets Processed: 947
+Total Packets Dropped: 53
+Average Processing Time: 0.01s
+Average Queue Delay: 0.00s
+Queue Capacity: 500
+=========================== 
+
+
+
+=== PIE Video Simulation Results ===
+Total Simulation Time: 67.76s
+Total Packets Generated: 1000
+Total Packets Processed: 950
+Total Packets Dropped: 50
+Average Processing Time: 0.01s
+Average Queue Delay: 0.00s
+Queue Capacity: 500

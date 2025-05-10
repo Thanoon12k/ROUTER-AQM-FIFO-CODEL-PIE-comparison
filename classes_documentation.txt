@@ -1,0 +1,181 @@
+CLASSES DOCUMENTATION
+====================
+
+1. PACKET CLASS
+--------------
+Objective: Represents a network packet with its properties
+
+Attributes:
+- packet_id: Unique identifier for the packet
+- data_length: Size of packet data in bytes
+- creation_time: When the packet was created
+- arrival_time: When the packet arrived
+- start_processing_time: When processing began
+- completion_time: When processing completed
+- delete_time: When packet was deleted
+
+2. EVENT LOGGER
+--------------
+Objective: Handles logging of simulation events with thread-safe operations
+
+Main Methods:
+- __init__(start_time)
+  Parameters:
+  * start_time: Simulation start time
+
+- log_event(event)
+  Parameters:
+  * event: Event message to log
+
+3. NETWORK LINK
+--------------
+Objective: Represents a network link with transmission capabilities
+
+Main Methods:
+- __init__(speed, latency=0.1)
+  Parameters:
+  * speed: Transmission speed in bytes per second
+  * latency: Network delay in seconds
+
+- transmit_packet(packet, sim_start_time)
+  Parameters:
+  * packet: Packet to transmit
+  * sim_start_time: Simulation start time
+
+4. PACKET QUEUE
+--------------
+Objective: Thread-safe queue for managing network packets
+
+Main Methods:
+- __init__(capacity, processing_speed=200000)
+  Parameters:
+  * capacity: Maximum queue size
+  * processing_speed: Processing speed in bytes per second
+
+- enqueue(packet)
+  Parameters:
+  * packet: Packet to add to queue
+
+- dequeue()
+  Purpose: Remove and return first packet
+
+- process_packets(sim_start_time)
+  Parameters:
+  * sim_start_time: Simulation start time
+
+5. STATISTICS COLLECTOR
+----------------------
+Objective: Collects and plots simulation statistics
+
+Main Methods:
+- record_statistics(current_time, queue)
+  Parameters:
+  * current_time: Current simulation time
+  * queue: Packet queue to analyze
+
+- plot_statistics()
+  Purpose: Generate plots of collected statistics
+
+6. SIMULATION
+------------
+Objective: Main simulation class that coordinates the entire process
+
+Main Methods:
+- __init__(queue_capacity, network_speed, generation_speed=0.05, csv_file="packets.csv")
+  Parameters:
+  * queue_capacity: Maximum queue size
+  * network_speed: Network transmission speed
+  * generation_speed: Time between packet generation
+  * csv_file: Input data file
+
+- generate_packets()
+  Purpose: Generate packets with specified intervals
+
+- process_packets()
+  Purpose: Process packets from the queue
+
+- run()
+  Purpose: Execute the simulation
+
+Note: This is a network simulation system that models packet transmission and processing
+with various performance metrics and visualization capabilities.
+
+1. STUDENT CLASS
+---------------
+Objective: Represents a student's information in the system
+
+Main Methods:
+- __init__(id, name, age, grade, major, gpa)
+  Parameters:
+  * id: Student's unique ID number
+  * name: Student's full name
+  * age: Student's age
+  * grade: Current grade level
+  * major: Field of study
+  * gpa: Grade Point Average
+
+2. STUDENT MANAGEMENT SYSTEM
+---------------------------
+Objective: Handles all student data operations and storage
+
+Main Methods:
+- __init__(db_file)
+  Parameters:
+  * db_file: Path to database file
+
+- add_student(student)
+  Parameters:
+  * student: Student object to add
+
+- update_student(student_id, updated_data)
+  Parameters:
+  * student_id: ID of student to update
+  * updated_data: New student information
+
+- delete_student(student_id)
+  Parameters:
+  * student_id: ID of student to remove
+
+3. STUDENT MANAGEMENT APP
+------------------------
+Objective: Provides the graphical user interface for the system
+
+Main Methods:
+- __init__(root)
+  Parameters:
+  * root: Main application window
+
+- add_student()
+  Purpose: Creates new student record
+
+- update_student()
+  Purpose: Updates existing student information
+
+- delete_student()
+  Purpose: Removes selected student
+
+4. CUSTOM UI WIDGETS
+-------------------
+Objective: Provide styled user interface components
+
+CustomEntry:
+- __init__(master, **kwargs)
+  Purpose: Creates styled text input field
+
+CustomButton:
+- __init__(master, **kwargs)
+  Purpose: Creates styled clickable button
+
+CustomLabel:
+- __init__(master, **kwargs)
+  Purpose: Creates styled text label
+
+CustomListbox:
+- __init__(master, **kwargs)
+  Purpose: Creates styled list display
+
+CustomFrame:
+- __init__(master, **kwargs)
+  Purpose: Creates styled container frame
+
+Note: All custom widgets extend basic tkinter widgets with additional styling 

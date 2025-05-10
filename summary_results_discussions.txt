@@ -1,0 +1,25 @@
+=== Network Traffic Analysis Results ===
+
+Web Traffic (1000 packets):
+PIE: 974 processed (97.4%) | FIFO: 970 processed (97.0%)
+PIE performs best for web traffic
+
+FTP Traffic (1000 packets):
+PIE: 947 processed (94.7%) | FIFO: 942 processed (94.2%)
+PIE shows better FTP handling
+
+Video Traffic (1000 packets):
+PIE: 950 processed (95.0%) | FIFO: 951 processed (95.1%)
+Similar performance for video
+
+Processing Speed:
+PIE: 65-67 seconds total | FIFO: 96-98 seconds total
+PIE is 30% faster overall
+
+Key Advantages of PIE:
+• Higher success rates for web and FTP
+• 30% faster processing time
+• Better overall performance
+• More efficient queue management
+
+=========================== 
