@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 class Packet:
     """Represents a network packet with all its properties."""
     packet_id: int
-    data_size: int
+    data_length: int
     creation_time: float
     arrival_time: float = 0
     start_processing_time: float = 0
@@ -22,7 +22,7 @@ class Packet:
     delete_time: float = 0
 
     def __str__(self) -> str:
-        return f"Packet {self.packet_id} (size: {self.data_size} bytes)"
+        return f"Packet {self.packet_id} (size: {self.data_length} bytes)"
 
 class EventLogger:
     """Handles logging of simulation events with thread-safe operations."""
@@ -65,7 +65,7 @@ class NetworkLink:
     def transmit_packet(self, packet: Packet, sim_start_time: float) -> float:
         """Transmit a packet through the network link."""
         with self.lock:
-            transmission_time = (packet.data_size / self.speed) + self.latency
+            transmission_time = (packet.data_length / self.speed) + self.latency
             time.sleep(transmission_time)
             packet.arrival_time = time.time() - sim_start_time
             return transmission_time
@@ -73,7 +73,7 @@ class NetworkLink:
 class PacketQueue:
     """Thread-safe queue for managing network packets."""
     
-    def __init__(self, capacity: int, processing_speed: int = 1000):
+    def __init__(self, capacity: int, processing_speed: int = 200000):
         self.items: List[Packet] = []
         self.capacity = capacity
         self.processing_speed = processing_speed  # bytes per second
@@ -128,7 +128,7 @@ class PacketQueue:
             return self.dequeue(), ""
 
         current_time = time.time() - sim_start_time
-        time_to_process = current_packet.data_size / self.processing_speed
+        time_to_process = current_packet.data_length / self.processing_speed
 
         current_packet.start_processing_time = current_time
         time.sleep(time_to_process)
@@ -208,11 +208,12 @@ class StatisticsCollector:
 class Simulation:
     """Main simulation class that coordinates the entire process."""
     
-    def __init__(self, queue_capacity: int, network_speed: int, csv_file: str = "packets.csv"):
+    def __init__(self, queue_capacity: int, network_speed: int, generation_speed: float = 0.05, csv_file: str = "packets.csv"):
         self.sim_start_time = time.time()
         self.event_logger = EventLogger(self.sim_start_time)
         self.packet_queue = PacketQueue(queue_capacity)
         self.network_link = NetworkLink(network_speed)
+        self.generation_speed = generation_speed  # Time between packet generation in seconds
         self.csv_file = csv_file
         self.packets_data = self._load_packets_from_csv()
         self.stats_collector = StatisticsCollector()
@@ -225,7 +226,7 @@ class Simulation:
             with open(self.csv_file, 'r') as f:
                 reader = csv.DictReader(f)
                 return [{'packet_id': int(row['packet_id']), 
-                        'data_size': int(row['data_size'])} 
+                        'data_length': int(row['data_length'])} 
                         for row in reader]
         except FileNotFoundError:
             self.event_logger.log_event(f"Error: CSV file '{self.csv_file}' not found")
@@ -249,7 +250,7 @@ class Simulation:
         for packet_data in self.packets_data:
             packet = Packet(
                 packet_id=packet_data['packet_id'],
-                data_size=packet_data['data_size'],
+                data_length=packet_data['data_length'],
                 creation_time=time.time() - self.sim_start_time
             )
             self.event_logger.log_event(f"Generated {packet}")
@@ -257,7 +258,7 @@ class Simulation:
             if not self.packet_queue.enqueue(packet):
                 self.event_logger.log_event(f"Queue full - {packet} dropped")
             
-            time.sleep(0.1)  # Simulate time between packet generation
+            time.sleep(self.generation_speed)  # Use the configurable generation speed
 
         self.event_logger.log_event("=== Packet Generation Complete ===")
         self.packet_queue.enqueue(None)  # Signal end of processing
@@ -347,8 +348,9 @@ class Simulation:
 def main():
     """Main entry point of the simulation."""
     simulation = Simulation(
-        queue_capacity=5,  # Increased queue capacity
-        network_speed=1000,
+        queue_capacity=500,  #  queue capacity (packets)
+        network_speed=100000,   # Increased to 100mbps
+        generation_speed=0.05,  # 50ms between packets
         csv_file="packets.csv"
     )
     simulation.run()

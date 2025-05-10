@@ -1,82 +1,226 @@
-# Network Simulation: FIFO vs CODEL AQM Comparison
+# Network Queue Management Simulation
 
-This project implements a network simulation comparing two Active Queue Management (AQM) algorithms: FIFO and CODEL. The simulation models a network with three different types of traffic sources (FTP, WEB, and VIDEO) and analyzes their performance under different queue management strategies.
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Algorithms](#algorithms)
+   - [FIFO Algorithm](#fifo-algorithm)
+   - [PIE Algorithm](#pie-algorithm)
+3. [Project Structure](#project-structure)
+4. [Implementation Details](#implementation-details)
+5. [Flow Diagrams](#flow-diagrams)
+6. [Usage](#usage)
+7. [Results and Analysis](#results-and-analysis)
+
+## Project Overview
+
+This project implements a network queue management simulation comparing two algorithms:
+- First-In-First-Out (FIFO)
+- Proportional Integral controller Enhanced (PIE)
+
+The simulation models a network node with packet queuing, processing, and transmission capabilities.
+
+## Algorithms
+
+### FIFO Algorithm
+
+FIFO (First-In-First-Out) is the simplest queue management algorithm where packets are processed in the order they arrive.
+
+#### Key Characteristics:
+- Simple implementation
+- No packet prioritization
+- Fixed queue capacity
+- Tail-drop when queue is full
+
+#### Mathematical Model:
+```
+Queue State:
+Q(t) = min(Q(t-1) + A(t) - D(t), C)
+
+Where:
+Q(t) = Current queue size
+A(t) = Arriving packets
+D(t) = Departing packets
+C = Queue capacity
+```
+
+### PIE Algorithm
+
+PIE (Proportional Integral controller Enhanced) is an active queue management algorithm that uses control theory to maintain a target delay.
+
+#### Key Components:
+
+1. **Delay Calculation**:
+```
+current_delay = current_time - packet_arrival_time
+```
+
+2. **Error Signal**:
+```
+delay_error = current_delay - target_delay
+queue_error = (current_queue_size - previous_queue_size) / capacity
+total_error = delay_error + queue_error
+```
+
+3. **Drop Probability Update**:
+```
+drop_probability += (α * error + β * accumulated_error)
+
+Where:
+α = Proportional gain (0.125)
+β = Integral gain (1.25)
+accumulated_error += error * time_diff
+```
+
+4. **Dynamic Drop Threshold**:
+```
+drop_threshold = drop_probability * (current_queue_size / capacity)
+```
 
 ## Project Structure
 
-- `network_components.py`: Contains the core network components (Host, Router, Server) and packet definitions
-- `simulation.py`: Main simulation script that runs the comparison and generates results
-- `requirements.txt`: Python package dependencies
-- `simulation_results.png`: Generated plots comparing FIFO and CODEL performance
-- `simulation_report.json`: Detailed simulation results and metrics
+```
+project/
+├── main.py           # FIFO implementation
+├── pie_main.py       # PIE implementation
+├── dataset/          # Input data files
+│   ├── bulk_ftp.csv
+│   └── bulk_115s_01.csv
+└── README.md
+```
 
-## Requirements
+### Class Hierarchy
 
-- Python 3.7+
-- Required packages (install using `pip install -r requirements.txt`):
-  - simpy
-  - numpy
-  - pandas
-  - matplotlib
+```
+Simulation
+├── EventLogger
+├── PacketQueue/PIEQueue
+├── NetworkLink
+└── StatisticsCollector
+    └── Plotting Functions
+```
 
-## Running the Simulation
+## Implementation Details
 
-1. Install the required packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Core Classes
 
-2. Run the simulation:
-   ```bash
-   python simulation.py
-   ```
+1. **Packet**
+   - Represents network packets
+   - Tracks timing information
+   - Stores packet properties
 
-The simulation will:
-- Run for 60 seconds
-- Generate 100 packets from each host type (FTP, WEB, VIDEO)
-- Compare FIFO and CODEL queue management
-- Generate performance plots and a detailed report
+2. **EventLogger**
+   - Thread-safe event logging
+   - Timestamp management
+   - File and console output
 
-## Simulation Parameters
+3. **NetworkLink**
+   - Simulates network transmission
+   - Handles latency and bandwidth
+   - Thread-safe operations
 
-- Queue Size: 100 packets
-- Simulation Time: 60 seconds
-- Packet Size Ranges:
-  - FTP: 500-1500 bytes
-  - WEB: 100-1000 bytes
-  - VIDEO: 1000-5000 bytes
-- CODEL Parameters:
-  - Target Delay: 5ms
-  - Interval: 100ms
+4. **Queue Management**
+   - FIFO: Simple queue with tail-drop
+   - PIE: Active queue management with delay control
 
-## Output
+5. **StatisticsCollector**
+   - Real-time statistics tracking
+   - Performance metrics
+   - Visualization tools
 
-The simulation generates two main output files:
+## Flow Diagrams
 
-1. `simulation_results.png`: Contains four plots:
-   - Packet Loss Comparison
-   - Average Queue Delay
-   - Throughput
-   - Per-Host Average Delay
+### Main Simulation Flow
+```mermaid
+graph TD
+    A[Start Simulation] --> B[Initialize Components]
+    B --> C[Start Statistics Thread]
+    C --> D[Start Generator Thread]
+    D --> E[Start Processor Thread]
+    E --> F[Generate Packets]
+    F --> G{Queue Full?}
+    G -->|Yes| H[Drop Packet]
+    G -->|No| I[Enqueue Packet]
+    I --> J[Process Packet]
+    J --> K[Update Statistics]
+    K --> L{All Packets Processed?}
+    L -->|No| F
+    L -->|Yes| M[End Simulation]
+```
 
-2. `simulation_report.json`: Detailed metrics including:
-   - Total packets sent/received
-   - Packet loss statistics
-   - Average delays
-   - Per-host metrics
-   - Simulation parameters
+### PIE Algorithm Flow
+```mermaid
+graph TD
+    A[Packet Arrival] --> B[Update PIE Parameters]
+    B --> C[Calculate Current Delay]
+    C --> D[Calculate Error Signal]
+    D --> E[Update Drop Probability]
+    E --> F{Queue > 50% Full?}
+    F -->|Yes| G[Calculate Drop Threshold]
+    F -->|No| H[Enqueue Packet]
+    G --> I{Random < Threshold?}
+    I -->|Yes| J[Drop Packet]
+    I -->|No| H
+```
 
-## Understanding the Results
+## Usage
 
-- **Packet Loss**: Lower is better. CODEL typically shows better packet loss characteristics by proactively dropping packets when delays exceed the target.
-- **Queue Delay**: Lower is better. CODEL aims to maintain a target delay by dropping packets when necessary.
-- **Throughput**: Higher is better. This shows the rate of successfully delivered packets.
-- **Per-Host Delay**: Shows how different traffic types are affected by each AQM strategy.
+1. **Running FIFO Simulation**:
+```bash
+python main.py
+```
 
-## Customization
+2. **Running PIE Simulation**:
+```bash
+python pie_main.py
+```
 
-You can modify the simulation parameters in `simulation.py`:
-- Queue size
-- Simulation duration
-- Packet size ranges
-- CODEL parameters (target delay and interval) 
+### Configuration Parameters
+
+```python
+simulation = Simulation(
+    queue_capacity=500,      # Queue size in packets
+    network_speed=100000,    # Network speed in bytes/s
+    generation_speed=0.02,   # Packet generation interval
+    csv_file="dataset/bulk_ftp.csv"
+)
+```
+
+## Results and Analysis
+
+### Performance Metrics
+
+1. **Throughput**
+   - Packets processed per second
+   - Network utilization
+
+2. **Queue Statistics**
+   - Queue size over time
+   - Average queue delay
+   - Drop probability
+
+3. **Processing Metrics**
+   - Average processing time
+   - Total packets processed
+   - Total packets dropped
+
+### Visualization
+
+The simulation generates four plots:
+1. Throughput over time
+2. Queue size over time
+3. Drop probability over time
+4. Queue delay over time
+
+## Future Improvements
+
+1. Additional queue management algorithms
+2. More sophisticated traffic patterns
+3. Network topology simulation
+4. Real-time visualization
+5. Performance optimization
+
+## References
+
+1. RFC 8033 - PIE: A Lightweight Control Scheme to Address the Bufferbloat Problem
+2. Network Queue Management: A Comprehensive Guide
+3. Active Queue Management: Principles and Practice 
