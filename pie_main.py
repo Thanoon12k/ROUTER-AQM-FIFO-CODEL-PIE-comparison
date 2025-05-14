@@ -378,11 +378,12 @@ class Simulation:
     def _print_statistics(self) -> None:
         """Print simulation statistics."""
         total_time = time.time() - self.sim_start_time
+        total_proccessed_packets =  len(self.packets_data)-self.packet_queue.stats['total_dropped']
         stats = [
             "\n=== Simulation Statistics ===",
             f"Total Simulation Time: {total_time:.2f}s",
             f"Total Packets Generated: {self.packet_queue.stats['total_packets']}",
-            f"Total Packets Processed: {self.packet_queue.stats['total_processed']}",
+            f"Total Packets Processed: {total_proccessed_packets}", 
             f"Total Packets Dropped: {self.packet_queue.stats['total_dropped']}",
             f"Average Processing Time: {self._calculate_avg_processing_time():.2f}s",
             f"Average Queue Delay: {self._calculate_avg_queue_delay():.2f}s",
@@ -434,7 +435,7 @@ def main():
         queue_capacity=500,  # Significantly increased queue capacity
         network_speed=100000,   # Increased to 100mbps
         generation_speed=0.02,  # 50ms between packets
-        csv_file="dataset/video_210s480p_01.csv"
+        csv_file="packets.csv"
     )
     simulation.run()
 

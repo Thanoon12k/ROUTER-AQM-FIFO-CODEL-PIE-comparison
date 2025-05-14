@@ -1,0 +1,74 @@
+=== PIE Network Simulation Events ===
+
+00:00.008 - === Starting Packet Generation ===
+00:00.009 - === Starting Packet Processing ===
+00:00.009 - Generated Packet 0 (size: 10 bytes)
+00:00.032 - Generated Packet 1 (size: 20 bytes)
+00:00.064 - Generated Packet 2 (size: 30 bytes)
+00:00.094 - Generated Packet 3 (size: 500 bytes)
+00:00.126 - Generated Packet 4 (size: 80 bytes)
+00:00.141 - Packet 1 (size: 20 bytes) processed
+00:00.158 - Generated Packet 5 (size: 90 bytes)
+00:00.189 - Generated Packet 6 (size: 110 bytes)
+00:00.221 - Generated Packet 7 (size: 120 bytes)
+00:00.251 - Generated Packet 8 (size: 130 bytes)
+00:00.267 - Packet 3 (size: 500 bytes) processed
+00:00.282 - Generated Packet 9 (size: 100 bytes)
+00:00.312 - Generated Packet 10 (size: 10 bytes)
+00:00.343 - Generated Packet 11 (size: 20 bytes)
+00:00.374 - Generated Packet 12 (size: 30 bytes)
+00:00.389 - Packet 5 (size: 90 bytes) processed
+00:00.406 - Generated Packet 13 (size: 500 bytes)
+00:00.437 - Generated Packet 14 (size: 80 bytes)
+00:00.469 - Generated Packet 15 (size: 90 bytes)
+00:00.500 - Generated Packet 16 (size: 110 bytes)
+00:00.516 - Packet 7 (size: 120 bytes) processed
+00:00.532 - Generated Packet 17 (size: 120 bytes)
+00:00.562 - Generated Packet 18 (size: 130 bytes)
+00:00.594 - Generated Packet 19 (size: 100 bytes)
+00:00.625 - Generated Packet 20 (size: 10 bytes)
+00:00.641 - Packet 9 (size: 100 bytes) processed
+00:00.658 - Generated Packet 21 (size: 20 bytes)
+00:00.688 - Generated Packet 22 (size: 30 bytes)
+00:00.719 - Generated Packet 23 (size: 500 bytes)
+00:00.751 - Generated Packet 24 (size: 80 bytes)
+00:00.766 - Packet 11 (size: 20 bytes) processed
+00:00.782 - Generated Packet 25 (size: 90 bytes)
+00:00.813 - Generated Packet 26 (size: 110 bytes)
+00:00.844 - Generated Packet 27 (size: 120 bytes)
+00:00.876 - Generated Packet 28 (size: 130 bytes)
+00:00.891 - Packet 13 (size: 500 bytes) processed
+00:00.907 - Generated Packet 29 (size: 100 bytes)
+00:00.938 - Generated Packet 30 (size: 10 bytes)
+00:00.969 - Generated Packet 31 (size: 20 bytes)
+00:01.001 - Generated Packet 32 (size: 30 bytes)
+00:01.017 - Packet 15 (size: 90 bytes) processed
+00:01.033 - Generated Packet 33 (size: 500 bytes)
+00:01.064 - Generated Packet 34 (size: 80 bytes)
+00:01.096 - Generated Packet 35 (size: 90 bytes)
+00:01.126 - Generated Packet 36 (size: 110 bytes)
+00:01.142 - Packet 17 (size: 120 bytes) processed
+00:01.158 - Generated Packet 37 (size: 120 bytes)
+00:01.189 - === Packet Generation Complete ===
+00:01.268 - Packet 19 (size: 100 bytes) processed
+00:01.393 - Packet 21 (size: 20 bytes) processed
+00:01.519 - Packet 23 (size: 500 bytes) processed
+00:01.643 - Packet 25 (size: 90 bytes) processed
+00:01.770 - Packet 27 (size: 120 bytes) processed
+00:01.897 - Packet 29 (size: 100 bytes) processed
+00:02.023 - Packet 31 (size: 20 bytes) processed
+00:02.151 - Packet 33 (size: 500 bytes) processed
+00:02.276 - Packet 35 (size: 90 bytes) processed
+00:02.403 - Packet 37 (size: 120 bytes) processed
+00:02.405 - 
+=== Simulation Statistics ===
+Total Simulation Time: 2.40s
+Total Packets Generated: 38
+Total Packets Processed: 38
+Total Packets Dropped: 0
+Average Processing Time: 0.00s
+Average Queue Delay: 0.00s
+Queue Capacity: 500
+===========================
+
+00:02.408 - === All packets processed - Exiting ===

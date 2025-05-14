@@ -169,41 +169,44 @@ class StatisticsCollector:
 
     def plot_statistics(self) -> None:
         """Plot the collected statistics."""
-        plt.figure(figsize=(10, 20))  # Adjusted figure size for vertical layout
+        plt.style.use('seaborn')  # Use a modern style
+        fig = plt.figure(figsize=(19, 6))  # 19:6 aspect ratio for presentation
         
-        # Plot 1: Throughput over time
-        plt.subplot(4, 1, 1)
-        plt.plot(self.timestamps, self.throughput, 'b-', label='Throughput (packets/s)')
-        plt.xlabel('Simulation Time (s)', fontsize=6)
-        plt.ylabel('Throughput', fontsize=6)
-        plt.grid(True)
-        plt.legend()
+        # Plot 1: Success Rate Comparison
+        plt.subplot(1, 3, 1)
+        success_rate = (self.throughput[-1] * self.timestamps[-1]) / len(self.timestamps) * 100
+        plt.bar(['Success Rate'], [success_rate], color='green', alpha=0.7)
+        plt.title('Packet Processing Success Rate', fontsize=12, pad=15)
+        plt.ylabel('Success Rate (%)', fontsize=10)
+        plt.ylim(0, 100)
+        plt.grid(True, alpha=0.3)
+        # Add value label on top of bar
+        plt.text(0, success_rate + 2, f'{success_rate:.1f}%', ha='center')
 
-        # Plot 2: Queue Size over time
-        plt.subplot(4, 1, 2)
-        plt.plot(self.timestamps, self.queue_size, 'r-', label='Queue Size (packets)')
-        plt.xlabel('Simulation Time (s)', fontsize=6)
-        plt.ylabel('Queue Size', fontsize=6)
-        plt.grid(True)
-        plt.legend()
+        # Plot 2: Queue Performance
+        plt.subplot(1, 3, 2)
+        plt.plot(self.timestamps, self.queue_size, 'b-', label='Queue Size', linewidth=2)
+        plt.title('Queue Size Over Time', fontsize=12, pad=15)
+        plt.xlabel('Time (s)', fontsize=10)
+        plt.ylabel('Queue Size (packets)', fontsize=10)
+        plt.grid(True, alpha=0.3)
+        plt.legend(fontsize=10)
 
-        # Plot 3: Processing Time over time
-        plt.subplot(4, 1, 3)
-        plt.plot(self.timestamps, self.processing_times, 'g-', label='Processing Time (s)')
-        plt.xlabel('Simulation Time (s)', fontsize=6)
-        plt.ylabel('Processing Time (s)', fontsize=6)
-        plt.grid(True)
-        plt.legend()
+        # Plot 3: Processing Efficiency
+        plt.subplot(1, 3, 3)
+        plt.bar(['Processing Time'], [self.processing_times[-1]], color='orange', alpha=0.7)
+        plt.title('Average Processing Time', fontsize=12, pad=15)
+        plt.ylabel('Time (s)', fontsize=10)
+        plt.grid(True, alpha=0.3)
+        # Add value label on top of bar
+        plt.text(0, self.processing_times[-1] + 0.01, f'{self.processing_times[-1]:.2f}s', ha='center')
 
-        # Plot 4: Dropped Packets over time
-        plt.subplot(4, 1, 4)
-        plt.plot(self.timestamps, self.dropped_packets, 'm-', label='Dropped Packets (count)')
-        plt.xlabel('Simulation Time (s)', fontsize=6)
-        plt.ylabel('Dropped Packets', fontsize=6)
-        plt.grid(True)
-        plt.legend()
-        plt.tight_layout(h_pad=6)
-        plt.show()
+        # Adjust layout and save
+        plt.tight_layout()
+        plt.savefig('simulation_results.png', dpi=300, bbox_inches='tight')
+        plt.close()
+
+        print("Plot has been saved as 'simulation_results.png'")
 
 class Simulation:
     """Main simulation class that coordinates the entire process."""
@@ -219,6 +222,7 @@ class Simulation:
         self.stats_collector = StatisticsCollector()
         self.stats_interval = 0.1  # Collect stats every 0.1 seconds
         self.simulation_complete = threading.Event()
+        self._total_number_of_packets = len(self.packets_data)
 
     def _load_packets_from_csv(self) -> List[Dict[str, int]]:
         """Load packet data from CSV file."""
@@ -297,11 +301,12 @@ class Simulation:
     def _print_statistics(self) -> None:
         """Print simulation statistics."""
         total_time = time.time() - self.sim_start_time
+        number_of_processed_packets = self._total_number_of_packets - self.packet_queue.stats['total_dropped']
         stats = [
             "\n=== Simulation Statistics ===",
             f"Total Simulation Time: {total_time:.2f}s",
             f"Total Packets Generated: {self.packet_queue.stats['total_packets']}",
-            f"Total Packets Processed: {self.packet_queue.stats['total_processed']}",
+            f"Total Packets Processed: {number_of_processed_packets}",
             f"Total Packets Dropped: {self.packet_queue.stats['total_dropped']}",
             f"Average Processing Time: {self._calculate_avg_processing_time():.2f}s",
             f"Queue Capacity: {self.packet_queue.capacity}",
@@ -351,7 +356,7 @@ def main():
         queue_capacity=500,  #  queue capacity (packets)
         network_speed=100000,   # Increased to 100mbps
         generation_speed=0.05,  # 50ms between packets
-        csv_file="packets.csv"
+        csv_file="dataset/web_multiple_06.csv"
     )
     simulation.run()
 

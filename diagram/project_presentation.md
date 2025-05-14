@@ -1,7 +1,6 @@
-# Network Queue Management Simulation
-## Project Presentation
 
----
+```
+
 
 ## Slide 1: Project Overview
 - **Title**: Network Queue Management Simulation
@@ -45,7 +44,7 @@ graph TB
     end
 ```
 
----
+
 
 ## Slide 4: FIFO Algorithm
 - **First-In-First-Out Implementation**:
